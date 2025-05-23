@@ -5,6 +5,10 @@ let selectedCell = null;
 let moveHistory = [];
 let currentPlayer = 'red';
 const playerDisplay = document.getElementById('current-player');
+// 新增计时器相关变量
+let timer;
+let remainingTime = 30;
+const timerDisplay = document.getElementById('timer');
 
 // 移动验证器
 const moveValidators = {
@@ -332,6 +336,12 @@ function createBoard() {
           selectedPiece = null;
           selectedCell = null;
 
+          // 重置计时器
+          clearInterval(timer);
+          remainingTime = 30;
+          timerDisplay.textContent = remainingTime;
+          startTimer();
+
           // 检查胜利条件
           const kings = document.querySelectorAll('[data-type="將"], [data-type="帥"]');
           if (kings.length < 2) {
@@ -366,6 +376,11 @@ function restartGame() {
   moveHistory = [];
   currentPlayer = 'red';
   playerDisplay.textContent = '红方';
+  // 重置计时器
+  clearInterval(timer);
+  remainingTime = 30;
+  timerDisplay.textContent = remainingTime;
+  startTimer();
   createBoard();
 }
 
@@ -381,6 +396,12 @@ function undoMove() {
   
   currentPlayer = currentPlayer === 'red' ? 'black' : 'red';
   playerDisplay.textContent = currentPlayer === 'red' ? '红方' : '黑方';
+
+  // 重置计时器
+  clearInterval(timer);
+  remainingTime = 30;
+  timerDisplay.textContent = remainingTime;
+  startTimer();
 }
 
 // 教程功能
@@ -398,8 +419,24 @@ function openTab(evt, tabName) {
   evt.currentTarget.className += " active";
 }
 
+// 启动计时器
+function startTimer() {
+  timer = setInterval(() => {
+    remainingTime--;
+    timerDisplay.textContent = remainingTime;
+    if (remainingTime === 0) {
+      clearInterval(timer);
+      const loser = currentPlayer;
+      const winner = loser === 'red' ? '黑方' : '红方';
+      alert(`${loser}超时，${winner}胜利！`);
+      restartGame();
+    }
+  }, 1000);
+}
+
 // 初始化游戏
 window.onload = function() {
   createBoard();
   document.querySelector('.tablinks').click();
+  startTimer();
 };

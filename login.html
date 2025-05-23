@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>战场中国象棋 - 登录</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: '华文中宋', 'Microsoft YaHei', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, #3a1c0c 0%, #6b2c10 25%, #8a3b16 50%, #6b2c10 75%, #3a1c0c 100%);
+            color: #ffd700;
+        }
+
+        .login-container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 2rem 3rem;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            border: 2px solid #ffd700;
+            width: 400px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px rgba(255, 60, 0, 0.5);
+        }
+
+        .form-group {
+            margin: 1.2rem 0;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            background: #5d432c;
+            border: 1px solid #ffd700;
+            border-radius: 25px;
+            color: #ffd700;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        button {
+            background: #5d432c;
+            color: #ffd700;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+            width: 180px;
+        }
+
+        button:hover {
+            background: #7a5c40;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .logged-in {
+            display: none;
+        }
+
+        .warrior-bg {
+            position: fixed;
+            width: 300px;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        .left-warrior { left: 50px; transform: scaleX(-1); }
+        .right-warrior { right: 50px; }
+    </style>
+</head>
+<body>
+    <img src="奶龙.jfif" class="warrior-bg left-warrior">
+    <img src="胖猫.jfif" class="warrior-bg right-warrior">
+
+    <div class="login-container">
+        <!-- 未登录状态 -->
+        <div id="loginForm">
+            <h2>将军请登录</h2>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <input type="text" id="username" placeholder="请输入帅旗名" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" placeholder="请输入军令符" required>
+                </div>
+                <button type="submit">擂鼓进军</button>
+            </form>
+        </div>
+
+        <!-- 已登录状态 -->
+        <div id="loggedIn" class="logged-in">
+            <h2>⚔️ 将军已就位 ⚔️</h2>
+            <p style="margin: 1rem 0;">当前军帐：<span id="loggedUser"></span></p>
+            <button onclick="enterGame()">沙场点兵</button>
+            <button onclick="logout()">鸣金收兵</button>
+        </div>
+    </div>
+
+    <script>
+        // 初始化检查登录状态
+        document.addEventListener('DOMContentLoaded', () => {
+            const loggedInUser = localStorage.getItem('chessUser');
+            if (loggedInUser) {
+                showLoggedInState(loggedInUser);
+            }
+        });
+
+        // 处理登录
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            localStorage.setItem('chessUser', username);
+            localStorage.setItem('isLoggedIn', 'true');
+            window.location.href = '中国传统象棋.html';
+        }
+
+        // 显示已登录状态
+        function showLoggedInState(username) {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('loggedIn').style.display = 'block';
+            document.getElementById('loggedUser').textContent = username;
+        }
+
+        // 进入游戏
+        function enterGame() {
+            window.location.href = '中国传统象棋.html';
+        }
+
+        // 退出登录
+        function logout() {
+            localStorage.removeItem('chessUser');
+            localStorage.removeItem('isLoggedIn');
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('loggedIn').style.display = 'none';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+    </script>
+</body>
+</html>

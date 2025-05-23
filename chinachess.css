@@ -250,6 +250,16 @@ button:hover {
   box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
+/* 新增计时器显示样式 */
+#timer-display {
+  color: #ffd700;
+  font-size: 1.2em;
+  padding: 0 1rem;
+  background: rgba(0,0,0,0.5);
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
 /* 动画 */
 @keyframes glow {
   0%, 100% { opacity: 0.8; transform: scale(1); }
