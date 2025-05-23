@@ -1,0 +1,92 @@
+<!-- 中国传统象棋.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>战场中国象棋</title>
+  <link rel="stylesheet" href="chinachess.css">
+</head>
+<body>
+  <!-- 战场特效 -->
+  <div class="battle-effects">
+    <div class="smoke"></div>
+    <div class="flame-particles"></div>
+    <div class="scorch-marks"></div>
+  </div>
+
+  <!-- 标题 -->
+  <h1>战场中国象棋</h1>
+
+  <!-- 控制面板 -->
+  <div id="controls">
+    <button onclick="restartGame()">重新开始</button>
+    <button onclick="undoMove()">悔棋</button>
+    <div id="player-turn">
+      当前玩家：<span id="current-player">红方</span>
+    </div>
+    <!-- 新增教程按钮 -->
+    <button id="tutorial-btn" onclick="showTutorial()">新手教程</button>
+  </div>
+
+  <!-- 棋盘 -->
+  <div id="chessboard">
+    <div class="gold-trim top"></div>
+    <div class="gold-trim bottom"></div>
+    <div class="tassels left"></div>
+    <div class="tassels right"></div>
+
+    <!-- 角色动画 -->
+    <div class="character-animation left">
+      <img src="奶龙.jfif" class="floating" alt="奶龙">
+    </div>
+    <div class="character-animation right">
+      <img src="胖猫.jfif" class="floating" alt="胖猫">
+    </div>
+  </div>
+
+  <!-- 教程弹窗 -->
+  <div id="tutorial-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeTutorial()">&times;</span>
+      <h2>象棋新手教程</h2>
+      
+      <!-- 标签页 -->
+      <div class="tab">
+        <button class="tablinks active" onclick="openTab(event, 'basic')">基础规则</button>
+        <button class="tablinks" onclick="openTab(event, 'pieces')">棋子走法</button>
+        <button class="tablinks" onclick="openTab(event, 'victory')">胜利条件</button>
+      </div>
+
+      <!-- 内容区域 -->
+      <div id="basic" class="tabcontent" style="display:block;">
+        <h3>棋盘布局</h3>
+        <p>棋盘由9x10个交叉点组成，中间有「楚河汉界」分隔</p>
+        <h3>行棋顺序</h3>
+        <p>红方先手，双方轮流移动己方棋子</p>
+      </div>
+
+      <div id="pieces" class="tabcontent">
+        <h3>車/俥</h3>
+        <p>直线任意距离移动，不能跨子</p>
+        <h3>馬/傌</h3>
+        <p>走日字，若前进方向有子则不能移动（蹩马腿）</p>
+        <h3>兵/卒</h3>
+        <p>未过河前只能前进；过河后可移动一格</p>
+        <h3>仕/士</h3>
+        <p>只走米字格，只能走一格直线</p>
+        <h3>相/象</h3>
+        <p>走田字，不能过河，若田字中央有棋子，则不能走</p>
+      </div>
+
+      <div id="victory" class="tabcontent">
+        <h3>胜利方式</h3>
+        <p>将死对方将/帅即获胜</p>
+        <h3>特殊规则</h3>
+        <p>将帅不能直接照面，需间隔至少一个棋子</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="chinachess.js"></script>
+</body>
+</html>
