@@ -213,7 +213,7 @@ body {
   transform: scale(1.15);
   box-shadow: 0 8px 15px rgba(0,0,0,0.7);
 }
-.red { color: #ff4444; text-shadow: 0 0 8px rgba(255,60,0,0.5); }
+.red { color: #8a2828; text-shadow: 0 0 8px rgba(255,60,0,0.5); }
 .black { color: #333; text-shadow: 0 0 8px rgba(0,0,0,0.5); }
 
 /* 控制面板 */
