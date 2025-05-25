@@ -97,6 +97,16 @@
     </div>
   </div>
 
+  <!-- 新增的视频播放容器 -->
+  <div id="piece-video-container" class="modal" style="display: none;">
+    <div class="modal-content" style="text-align: center; padding: 0;">
+      <span class="close" onclick="closePieceVideo()">&times;</span>
+      <video id="piece-video" width="500" controls autoplay>
+        您的浏览器不支持视频播放。
+      </video>
+    </div>
+  </div>
+
   <!-- 音频元素 -->
   <audio id="game-music" src="TeamfightTactics.flac" autoplay loop></audio>
 
