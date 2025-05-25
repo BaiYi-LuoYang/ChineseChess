@@ -26,6 +26,8 @@ let draggedElement = null;
 const ELEPHANT_STOMP_IMAGE = 'elephant_stomp.png';
 // 马踏动画图片路径
 const HORSE_STOMP_IMAGE = 'horse_stomp.png';
+// 记录背景音乐暂停/播放状态
+let musicWasPlaying = false;
 
 // 移动验证器
 const moveValidators = {
@@ -286,7 +288,7 @@ function createBoard() {
 
                     // 检查是否攻击己方
                     if (targetPiece && targetPiece.classList.contains(selectedPiece.classList.contains('red') ? 'red' : 'black')) {
-                        alert("不能吃自己的棋子！");
+                        // alert("不能吃自己的棋子！");
                         selectedPiece.classList.remove('selected');
                         selectedPiece = null;
                         selectedCell = null;
@@ -489,6 +491,13 @@ function closeTutorial() {
     // 暂停视频
     tutorialVideo.pause();
     playPauseBtn.textContent = '播放';
+
+    // 恢复音乐状态
+    if (musicWasPlaying) {
+        toggleMusic(); // 之前在播放则继续播放
+    }
+    // 重置状态记录
+    musicWasPlaying = false;
 }
 
 function openTab(evt, tabName) {
@@ -540,10 +549,20 @@ function startGame() {
         // 可以在这里提示用户点击按钮开始音乐
         musicBtn.textContent = '点击播放音乐';
     });
+
+    // 确保游戏开始时音乐状态由用户控制（非自动播放）
+    music.play().catch(e => {
+        musicBtn.textContent = '点击播放音乐';
+    });
 }
 
 // 打开视频容器
 function openVideo() {
+    musicWasPlaying = !music.paused; // 记录打开前的音乐状态
+    if (musicWasPlaying) {
+        toggleMusic(); // 暂停背景音乐
+    }
+
     const tabcontent = document.getElementsByClassName("tabcontent");
     for (let i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";
@@ -561,6 +580,10 @@ function toggleVideo() {
     if (tutorialVideo.paused) {
         tutorialVideo.play();
         playPauseBtn.textContent = '暂停';
+        if (!music.paused) { // 视频开始播放时暂停音乐
+            musicWasPlaying = true;
+            toggleMusic();
+        }
     } else {
         tutorialVideo.pause();
         playPauseBtn.textContent = '播放';
