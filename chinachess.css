@@ -201,22 +201,21 @@ button:hover {
 }
 .modal {
   display: none;
-  position: fixed;
+  position: absolute; /* 修改为绝对定位 */
   z-index: 999;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  /* 移除背景遮罩 */
+  background: none;
 }
 .modal-content {
   background: #666; /* 模态框背景颜色改为深灰色 */
-  margin: 5% auto;
+  margin: 0;
   padding: 20px;
   width: 600px;
   border-radius: 15px;
   border: 2px solid #888; /* 模态框边框颜色改为灰色 */
   color: #fff; /* 模态框文字颜色改为白色 */
+  position: absolute; /* 确保模态框内容也是绝对定位 */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* 添加阴影增强可见性 */
 }
 .tab {
   border-bottom: 1px solid #888; /* 标签页底部边框颜色改为灰色 */

@@ -18,6 +18,10 @@ const startGameBtn = document.getElementById('start-game-btn');
 const videoContainer = document.getElementById('video-container');
 const tutorialVideo = document.getElementById('tutorial-video');
 const playPauseBtn = document.getElementById('play-pause-btn');
+// 拖动相关变量
+let isDragging = false;
+let offsetX, offsetY;
+let draggedElement = null;
 
 // 移动验证器
 const moveValidators = {
@@ -420,9 +424,14 @@ function undoMove() {
 
 // 教程功能
 function showTutorial() {
-  document.getElementById('tutorial-modal').style.display = 'block';
+  const modal = document.getElementById('tutorial-modal');
+  modal.style.display = 'block';
   // 隐藏视频容器
   videoContainer.style.display = 'none';
+  // 设置模态框位置为居中
+  modal.style.left = '50%';
+  modal.style.top = '50%';
+  modal.style.transform = 'translate(-50%, -50%)';
 }
 function closeTutorial() {
   document.getElementById('tutorial-modal').style.display = 'none';
@@ -507,6 +516,72 @@ function toggleVideo() {
   }
 }
 
+// 拖动相关函数
+function initDraggable() {
+  const modal = document.getElementById('tutorial-modal');
+  const modalContent = document.querySelector('.modal-content');
+  const header = document.querySelector('.modal-content h2');
+  
+  // 只有在模态框存在时才设置拖动
+  if (modal && header) {
+    // 设置模态框为绝对定位以便拖动
+    modal.style.position = 'absolute';
+    modal.style.zIndex = '999';
+    
+    // 添加拖动事件
+    header.style.cursor = 'move';
+    header.addEventListener('mousedown', startDrag);
+    
+    // 阻止标题文本被选中
+    header.style.userSelect = 'none';
+  }
+}
+
+function startDrag(e) {
+  const modal = document.getElementById('tutorial-modal');
+  isDragging = true;
+  draggedElement = modal;
+  
+  // 计算鼠标位置与模态框位置的偏移量
+  const modalRect = modal.getBoundingClientRect();
+  offsetX = e.clientX - modalRect.left;
+  offsetY = e.clientY - modalRect.top;
+  
+  // 添加事件监听器
+  document.addEventListener('mousemove', drag);
+  document.addEventListener('mouseup', stopDrag);
+  
+  // 阻止事件冒泡和默认行为
+  e.preventDefault();
+  e.stopPropagation();
+}
+
+function drag(e) {
+  if (isDragging && draggedElement) {
+    // 计算新位置
+    const x = e.clientX - offsetX;
+    const y = e.clientY - offsetY;
+    
+    // 设置模态框位置
+    draggedElement.style.left = `${x}px`;
+    draggedElement.style.top = `${y}px`;
+    draggedElement.style.transform = 'none'; // 移除居中转换
+    
+    // 阻止事件冒泡和默认行为
+    e.preventDefault();
+    e.stopPropagation();
+  }
+}
+
+function stopDrag() {
+  isDragging = false;
+  draggedElement = null;
+  
+  // 移除事件监听器
+  document.removeEventListener('mousemove', drag);
+  document.removeEventListener('mouseup', stopDrag);
+}
+
 // 初始化页面时不自动开始游戏
 window.onload = function() {
   createBoard();
@@ -514,4 +589,7 @@ window.onload = function() {
   startGameBtn.disabled = false;
   remainingTime = 30;
   timerDisplay.textContent = remainingTime;
+  
+  // 初始化拖动功能
+  initDraggable();
 };
