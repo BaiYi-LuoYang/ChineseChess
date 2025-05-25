@@ -18,6 +18,9 @@ const startGameBtn = document.getElementById('start-game-btn');
 const videoContainer = document.getElementById('video-container');
 const tutorialVideo = document.getElementById('tutorial-video');
 const playPauseBtn = document.getElementById('play-pause-btn');
+// 新增的棋子视频变量
+const pieceVideoContainer = document.getElementById('piece-video-container');
+const pieceVideo = document.getElementById('piece-video');
 // 拖动相关变量
 let isDragging = false;
 let offsetX, offsetY;
@@ -255,7 +258,13 @@ function createBoard() {
             if (initialPieces[pieceKey]) {
                 const piece = document.createElement('div');
                 piece.className = `piece ${initialPieces[pieceKey].color}`;
-                piece.textContent = initialPieces[pieceKey].text;
+                if (initialPieces[pieceKey].text === '帥') {
+                    piece.innerHTML = `<img src="ya.jpg" alt="帅" style="width: 44px; height: 44px; border-radius: 50%;">`;
+                } else if (initialPieces[pieceKey].text === '將') {
+                    piece.innerHTML = `<img src="shb.jpg" alt="将" style="width: 44px; height: 44px; border-radius: 50%;">`;
+                } else {
+                    piece.textContent = initialPieces[pieceKey].text;
+                }
                 piece.dataset.type = initialPieces[pieceKey].text;
                 cell.appendChild(piece);
             }
@@ -322,6 +331,19 @@ function createBoard() {
                             // 触发马踏动画
                             triggerCrushAnimation(toX, toY, "horse");
                         }
+                        
+                        // 检查是否吃掉了帅或将
+                        if (targetPiece.dataset.type === "帥" || targetPiece.dataset.type === "將") {
+                            // 停止背景音乐
+                            music.pause();
+                            
+                            // 显示对应的视频
+                            if (targetPiece.dataset.type === "帥") {
+                                playPieceVideo('ya.mp4');
+                            } else {
+                                playPieceVideo('shb.mp4');
+                            }
+                        }
                     }
                     clickedCell.appendChild(selectedPiece);
 
@@ -363,8 +385,9 @@ function createBoard() {
                     // 检查胜利条件
                     const kings = document.querySelectorAll('[data-type="將"], [data-type="帥"]');
                     if (kings.length < 2) {
-                        const winner = kings[0].classList.contains('red') ? '红方' : '黑方';
+                        // 延迟显示胜利提示，确保视频先播放
                         setTimeout(() => {
+                            const winner = kings.length > 0 ? (kings[0].classList.contains('red') ? '红方' : '黑方') : '游戏结束';
                             alert(`${winner}胜利！`);
                             restartGame();
                         }, 100);
@@ -426,6 +449,41 @@ function triggerCrushAnimation(x, y, animalType) {
     }, 500);
 }
 
+// 播放棋子被吃掉的视频
+function playPieceVideo(videoPath) {
+    pieceVideo.src = videoPath;
+    pieceVideoContainer.style.display = 'flex';
+    
+    // 视频加载后播放
+    pieceVideo.load();
+    pieceVideo.play().catch(e => {
+        console.log("视频播放被阻止:", e);
+        // 可以在这里提示用户点击播放视频
+        pieceVideoContainer.style.display = 'flex';
+    });
+    
+    // 视频结束后隐藏容器
+    pieceVideo.onended = function() {
+        pieceVideoContainer.style.display = 'none';
+        // 如果游戏还未结束，继续播放背景音乐
+        const kings = document.querySelectorAll('[data-type="將"], [data-type="帥"]');
+        if (kings.length > 1) {
+            music.play();
+        }
+    };
+}
+
+// 关闭棋子视频
+function closePieceVideo() {
+    pieceVideo.pause();
+    pieceVideoContainer.style.display = 'none';
+    // 如果游戏还未结束，继续播放背景音乐
+    const kings = document.querySelectorAll('[data-type="將"], [data-type="帥"]');
+    if (kings.length > 1) {
+        music.play();
+    }
+}
+
 // 切换闪烁动画
 function switchBlinkAnimation() {
     document.querySelectorAll('.piece').forEach(piece => {
@@ -449,6 +507,8 @@ function restartGame() {
     remainingTime = 30;
     timerDisplay.textContent = remainingTime;
     startGameBtn.disabled = false;
+    // 关闭视频容器
+    pieceVideoContainer.style.display = 'none';
     createBoard();
 }
 

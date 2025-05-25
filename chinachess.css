@@ -304,6 +304,30 @@ button:hover {
   }
 }
 
-#video-container {
-    z-index: 1000; /* 确保视频层级高于其他元素 */
+/* 新增的视频容器样式 */
+#piece-video-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+#piece-video-container .modal-content {
+  max-width: 80%;
+  max-height: 80%;
+  background-color: #000;
+  padding: 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#piece-video {
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
 }
