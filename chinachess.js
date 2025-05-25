@@ -261,7 +261,7 @@ function createBoard() {
                 if (initialPieces[pieceKey].text === '帥') {
                     piece.innerHTML = `<img src="ya.jpg" alt="帅" style="width: 44px; height: 44px; border-radius: 50%;">`;
                 } else if (initialPieces[pieceKey].text === '將') {
-                    piece.innerHTML = `<img src="shb.jpg" alt="将" style="width: 44px; height: 44px; border-radius: 50%;">`;
+                    piece.innerHTML = `<img src="ylf.jpg" alt="将" style="width: 44px; height: 44px; border-radius: 50%;">`;
                 } else {
                     piece.textContent = initialPieces[pieceKey].text;
                 }
@@ -341,7 +341,7 @@ function createBoard() {
                             if (targetPiece.dataset.type === "帥") {
                                 playPieceVideo('ya.mp4');
                             } else {
-                                playPieceVideo('shb.mp4');
+                                playPieceVideo('ylf.mp4');
                             }
                         }
                     }
@@ -385,12 +385,22 @@ function createBoard() {
                     // 检查胜利条件
                     const kings = document.querySelectorAll('[data-type="將"], [data-type="帥"]');
                     if (kings.length < 2) {
-                        // 延迟显示胜利提示，确保视频先播放
+                        const winner = kings.length > 0 ? (kings[0].classList.contains('red') ? '红方' : '黑方') : '游戏结束';
+                        const winnerDisplay = document.createElement('div');
+                        winnerDisplay.id = 'winner-display';
+                        winnerDisplay.textContent = `${winner}胜利！`;
+                        winnerDisplay.style.position = 'absolute';
+                        winnerDisplay.style.left = '10%';
+                        winnerDisplay.style.top = '50%';
+                        winnerDisplay.style.transform = 'translateY(-50%)';
+                        winnerDisplay.style.fontSize = '36px';
+                        winnerDisplay.style.color = 'white';
+                        pieceVideoContainer.appendChild(winnerDisplay);
+
+                        // 延迟重启游戏
                         setTimeout(() => {
-                            const winner = kings.length > 0 ? (kings[0].classList.contains('red') ? '红方' : '黑方') : '游戏结束';
-                            alert(`${winner}胜利！`);
                             restartGame();
-                        }, 100);
+                        }, 5000);
                     }
                 } else if (clickedPiece && clickedPiece.classList.contains(currentPlayer)) {
                     // 选择己方棋子
@@ -454,12 +464,22 @@ function playPieceVideo(videoPath) {
     pieceVideo.src = videoPath;
     pieceVideoContainer.style.display = 'flex';
     
-    // 视频加载后播放
-    pieceVideo.load();
-    pieceVideo.play().catch(e => {
-        console.log("视频播放被阻止:", e);
-        // 可以在这里提示用户点击播放视频
-        pieceVideoContainer.style.display = 'flex';
+    // 视频加载事件
+    pieceVideo.addEventListener('loadeddata', () => {
+        pieceVideo.play().catch(e => {
+            console.log("视频播放被阻止:", e);
+            alert("视频播放被阻止，请手动点击播放按钮。");
+        });
+    });
+
+    // 视频错误事件
+    pieceVideo.addEventListener('error', () => {
+        console.log("视频加载失败:", pieceVideo.error);
+        alert("视频加载失败，请检查视频文件是否存在。");
+        pieceVideoContainer.style.display = 'none';
+        if (document.querySelectorAll('[data-type="將"], [data-type="帥"]').length > 1) {
+            music.play();
+        }
     });
     
     // 视频结束后隐藏容器
@@ -509,6 +529,10 @@ function restartGame() {
     startGameBtn.disabled = false;
     // 关闭视频容器
     pieceVideoContainer.style.display = 'none';
+    const winnerDisplay = document.getElementById('winner-display');
+    if (winnerDisplay) {
+        winnerDisplay.remove();
+    }
     createBoard();
 }
 
