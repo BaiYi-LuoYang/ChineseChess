@@ -5,10 +5,19 @@ let selectedCell = null;
 let moveHistory = [];
 let currentPlayer = 'red';
 const playerDisplay = document.getElementById('current-player');
-// 新增计时器相关变量
+// 计时器相关变量
 let timer;
 let remainingTime = 30;
 const timerDisplay = document.getElementById('timer');
+// 音乐相关变量
+const music = document.getElementById('game-music');
+const musicBtn = document.getElementById('music-btn');
+// 新增开始游戏按钮
+const startGameBtn = document.getElementById('start-game-btn');
+// 视频相关变量
+const videoContainer = document.getElementById('video-container');
+const tutorialVideo = document.getElementById('tutorial-video');
+const playPauseBtn = document.getElementById('play-pause-btn');
 
 // 移动验证器
 const moveValidators = {
@@ -218,23 +227,6 @@ function createBoard() {
   // 清空棋盘
   board.innerHTML = '';
 
-  // 添加装饰元素
-  const decorations = `
-    <div class="gold-trim top"></div>
-    <div class="gold-trim bottom"></div>
-    <div class="tassels left"></div>
-    <div class="tassels right"></div>
-  `;
-  board.innerHTML = decorations;
-
-  // 添加河流效果
-  const river = document.createElement('div');
-  river.className = 'river-effect';
-  board.appendChild(river);
-  const wave = document.createElement('div');
-  wave.className = 'wave';
-  river.appendChild(wave);
-
   // 创建网格线
   createGridLines();
 
@@ -260,6 +252,8 @@ function createBoard() {
 
       // 点击事件处理
       cell.addEventListener('click', function(e) {
+        if (!timer) return; // 如果计时器未启动，禁止点击
+
         const clickedCell = e.currentTarget;
         const clickedPiece = clickedCell.querySelector('.piece');
 
@@ -331,6 +325,9 @@ function createBoard() {
           currentPlayer = currentPlayer === 'red' ? 'black' : 'red';
           playerDisplay.textContent = currentPlayer === 'red' ? '红方' : '黑方';
 
+          // 切换闪烁动画
+          switchBlinkAnimation();
+
           // 重置选择
           selectedPiece.classList.remove('selected');
           selectedPiece = null;
@@ -364,9 +361,23 @@ function createBoard() {
   }
 
   // 设置层级关系
-  document.querySelectorAll('.gold-trim, .tassels').forEach(el => el.style.zIndex = 1);
-  document.querySelectorAll('.cell, .grid-line').forEach(el => el.style.zIndex = 2);
+  document.querySelectorAll('.grid-line').forEach(el => el.style.zIndex = 2);
+  document.querySelectorAll('.cell').forEach(el => el.style.zIndex = 3);
   document.querySelectorAll('.piece').forEach(el => el.style.zIndex = 3);
+
+  // 初始闪烁动画
+  switchBlinkAnimation();
+}
+
+// 切换闪烁动画
+function switchBlinkAnimation() {
+  document.querySelectorAll('.piece').forEach(piece => {
+    piece.classList.remove('blink-animation');
+  });
+  const currentPlayerPieces = document.querySelectorAll(`.piece.${currentPlayer}`);
+  currentPlayerPieces.forEach(piece => {
+    piece.classList.add('blink-animation');
+  });
 }
 
 // 重新开始游戏
@@ -380,7 +391,7 @@ function restartGame() {
   clearInterval(timer);
   remainingTime = 30;
   timerDisplay.textContent = remainingTime;
-  startTimer();
+  startGameBtn.disabled = false;
   createBoard();
 }
 
@@ -397,6 +408,9 @@ function undoMove() {
   currentPlayer = currentPlayer === 'red' ? 'black' : 'red';
   playerDisplay.textContent = currentPlayer === 'red' ? '红方' : '黑方';
 
+  // 切换闪烁动画
+  switchBlinkAnimation();
+
   // 重置计时器
   clearInterval(timer);
   remainingTime = 30;
@@ -405,8 +419,17 @@ function undoMove() {
 }
 
 // 教程功能
-function showTutorial() { document.getElementById('tutorial-modal').style.display = 'block'; }
-function closeTutorial() { document.getElementById('tutorial-modal').style.display = 'none'; }
+function showTutorial() {
+  document.getElementById('tutorial-modal').style.display = 'block';
+  // 隐藏视频容器
+  videoContainer.style.display = 'none';
+}
+function closeTutorial() {
+  document.getElementById('tutorial-modal').style.display = 'none';
+  // 暂停视频
+  tutorialVideo.pause();
+  playPauseBtn.textContent = '播放';
+}
 
 function openTab(evt, tabName) {
   const tabcontent = document.getElementsByClassName("tabcontent");
@@ -434,9 +457,61 @@ function startTimer() {
   }, 1000);
 }
 
-// 初始化游戏
-window.onload = function() {
+// 切换音乐播放状态
+function toggleMusic() {
+  if (music.paused) {
+    music.play();
+    musicBtn.textContent = '暂停音乐';
+  } else {
+    music.pause();
+    musicBtn.textContent = '播放音乐';
+  }
+}
+
+// 开始游戏函数
+function startGame() {
+  startGameBtn.disabled = true;
   createBoard();
   document.querySelector('.tablinks').click();
   startTimer();
+  // 确保音乐在页面加载时播放
+  music.play().catch(e => {
+    console.log("自动播放被阻止:", e);
+    // 可以在这里提示用户点击按钮开始音乐
+    musicBtn.textContent = '点击播放音乐';
+  });
+}
+
+// 打开视频容器
+function openVideo() {
+  const tabcontent = document.getElementsByClassName("tabcontent");
+  for (let i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  const tablinks = document.getElementsByClassName("tablinks");
+  for (let i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  videoContainer.style.display = 'block';
+  document.querySelector('[onclick="openVideo()"]').className += " active";
+}
+
+// 播放/暂停视频
+function toggleVideo() {
+  if (tutorialVideo.paused) {
+    tutorialVideo.play();
+    playPauseBtn.textContent = '暂停';
+  } else {
+    tutorialVideo.pause();
+    playPauseBtn.textContent = '播放';
+  }
+}
+
+// 初始化页面时不自动开始游戏
+window.onload = function() {
+  createBoard();
+  document.querySelector('.tablinks').click();
+  startGameBtn.disabled = false;
+  remainingTime = 30;
+  timerDisplay.textContent = remainingTime;
 };

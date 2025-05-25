@@ -1,368 +1,368 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>战场中国象棋 - 登录</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'warriors': {
-                            'primary': '#8C1C13', // 主色：朱砂红
-                            'secondary': '#D4AF37', // 辅助色：金色
-                            'tertiary': '#4A2C2A', // 第三色：红褐色
-                            'dark': '#1A120B', // 深色：墨黑
-                            'light': '#E5E5CB', // 浅色：米白
-                            'wood': '#8B4513', // 木色
-                            // 新增调暗颜色
-                            'light-dim': 'rgba(229, 229, 203, 0.7)', 
-                            'secondary-dim': 'rgba(212, 175, 55, 0.7)' 
-                        }
-                    },
-                    fontFamily: {
-                        'warriors': ['"Ma Shan Zheng"', '"Noto Serif SC"', 'serif']
-                    },
-                    boxShadow: {
-                        'gold': '0 0 15px rgba(212, 175, 55, 0.6)',
-                        'inner-gold': 'inset 0 0 10px rgba(212, 175, 55, 0.3)'
-                    }
-                }
-            }
-        }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .content-auto {
-                content-visibility: auto;
-            }
-            .text-shadow {
-                text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-            }
-            .text-shadow-lg {
-                text-shadow: 0 0 15px rgb(131 112 49 / 70%), 0 0 30px rgba(212, 175, 55, 0.4);
-            }
-            .bg-texture {
-                background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%239C92AC' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
-            }
-            .bg-brick {
-                background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            }
-            .border-gold {
-                border-image: linear-gradient(to right, #D4AF37, #F8E1B5, #D4AF37) 1;
-            }
-            .btn-hover {
-                position: relative;
-                overflow: hidden;
-                transition: all 0.3s ease;
-            }
-            .btn-hover::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: -100%;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
-                transition: all 0.6s ease;
-            }
-            .btn-hover:hover::before {
-                left: 100%;
-            }
-            .chess-piece-shadow {
-                filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
-            }
-            .animate-float {
-                animation: float 6s ease-in-out infinite;
-            }
-            @keyframes float {
-                0%, 100% { transform: translateY(0); }
-                50% { transform: translateY(-15px); }
-            }
-            .animate-float-slow {
-                animation: float-slow 8s ease-in-out infinite;
-            }
-            @keyframes float-slow {
-                0%, 100% { transform: translateY(0); }
-                50% { transform: translateY(-20px); }
-            }
-            .animate-float-fast {
-                animation: float-fast 4s ease-in-out infinite;
-            }
-            @keyframes float-fast {
-                0%, 100% { transform: translateY(0); }
-                50% { transform: translateY(-10px); }
-            }
-            .animate-pulse-gold {
-                animation: pulse-gold 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-            }
-            @keyframes pulse-gold {
-                0%, 100% { opacity: 1; }
-                50% { opacity: 0.5; }
-            }
-        }
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>水墨江南 - 登录</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- 配置Tailwind自定义颜色和字体 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#2D2A32',       // 墨色
+            paper: '#F5F2E9',     // 宣纸色
+            red: '#C8102E',       // 中国红
+            gold: '#D4AF37',      // 金色
+            light: '#F9F6EE',     // 浅米色
+            dark: '#8B4513',      // 深褐色
+            accent: '#A67C52',    // 棕褐色
+            water: '#4A6FA5',     // 水色
+          },
+          fontFamily: {
+            ink: ['"Ma Shan Zheng"', 'cursive'],
+            paper: ['"ZCOOL XiaoWei"', 'serif']
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .ink-wash {
+        background-blend-mode: overlay;
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+      .brush-border {
+        position: relative;
+      }
+      .brush-border::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, rgba(166, 124, 82, 0) 0%, rgba(166, 124, 82, 0.8) 50%, rgba(166, 124, 82, 0) 100%);
+      }
+      .scroll-smooth {
+        scroll-behavior: smooth;
+      }
+      .shadow-ink {
+        box-shadow: 0 4px 15px rgba(45, 42, 50, 0.2);
+      }
+    }
+  </style>
+  
+  <!-- 引入中文字体 -->
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+  
+  <style>
+    /* 水墨风格背景动画 */
+    @keyframes inkSpread {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    /* 验证码动画 */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    
+    .shake {
+      animation: shake 0.5s ease-in-out;
+    }
+    
+    /* 输入框聚焦效果 */
+    .input-focus:focus {
+      border-color: #A67C52;
+      box-shadow: 0 0 0 3px rgba(166, 124, 82, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    /* 按钮悬停效果 */
+    .btn-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(166, 124, 82, 0.4);
+      transition: all 0.3s ease;
+    }
+    
+    /* 验证码刷新动画 */
+    .refresh-animation {
+      animation: rotate 0.5s ease-in-out;
+    }
+    
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* 背景模糊效果 */
+    .bg-blur {
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+  </style>
 </head>
-<body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-warriors-dark to-warriors-tertiary bg-texture bg-brick overflow-hidden relative">
-    <!-- 背景装饰 -->
-    <div class="absolute inset-0 pointer-events-none">
-        <!-- 顶部装饰 -->
-        <div class="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-warriors-secondary/20 to-transparent"></div>
-        
-        <!-- 底部装饰 -->
-        <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-warriors-secondary/20 to-transparent"></div>
-        
-        <!-- 左侧装饰 -->
-        <div class="absolute top-0 left-0 h-full w-24 bg-gradient-to-r from-warriors-secondary/20 to-transparent"></div>
-        
-        <!-- 右侧装饰 -->
-        <div class="absolute top-0 right-0 h-full w-24 bg-gradient-to-l from-warriors-secondary/20 to-transparent"></div>
-        
-        <!-- 火焰效果 -->
-        <div class="absolute -top-10 left-1/4 w-64 h-64 bg-warriors-primary/30 rounded-full filter blur-3xl animate-pulse-gold"></div>
-        <div class="absolute -bottom-10 right-1/4 w-64 h-64 bg-warriors-primary/30 rounded-full filter blur-3xl animate-pulse-gold" style="animation-delay: 1s;"></div>
-        
-        <!-- 背景棋子 -->
-        <div class="absolute top-1/4 left-1/5 w-20 h-20 opacity-20 chess-piece-shadow animate-float-slow">
-            <svg viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" fill="#1A120B" stroke="#D4AF37" stroke-width="3" />
-                <text x="50" y="60" font-family="'Ma Shan Zheng', serif" font-size="40" fill="#D4AF37" text-anchor="middle">車</text>
-            </svg>
-        </div>
-        <div class="absolute bottom-1/3 right-1/6 w-24 h-24 opacity-20 chess-piece-shadow animate-float">
-            <svg viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" fill="#1A120B" stroke="#D4AF37" stroke-width="3" />
-                <text x="50" y="60" font-family="'Ma Shan Zheng', serif" font-size="40" fill="#D4AF37" text-anchor="middle">馬</text>
-            </svg>
-        </div>
-        <div class="absolute top-1/3 right-1/4 w-16 h-16 opacity-20 chess-piece-shadow animate-float-fast">
-            <svg viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" fill="#1A120B" stroke="#D4AF37" stroke-width="3" />
-                <text x="50" y="60" font-family="'Ma Shan Zheng', serif" font-size="40" fill="#D4AF37" text-anchor="middle">卒</text>
-            </svg>
-        </div>
+<body class="min-h-screen bg-paper overflow-x-hidden scroll-smooth">
+  <!-- 背景图片 -->
+  <div class="fixed inset-0 z-0 bg-cover bg-center ink-wash" style="background-image: url('./water_ink_background.jpg');">
+    <!-- 水墨纹理叠加 -->
+    <div class="absolute inset-0 bg-black/20"></div>
+  </div>
+
+  <!-- 主容器 -->
+  <div class="relative z-10 min-h-screen flex flex-col items-center justify-center p-4">
+    <!-- 标题区域 -->
+    <div class="text-center mb-10 transform transition-all duration-500 hover:scale-105">
+      <h1 class="text-[clamp(2.5rem,6vw,4rem)] font-ink text-paper drop-shadow-lg brush-border inline-block">水墨江南</h1>
+      <p class="mt-4 text-[clamp(1rem,2vw,1.25rem)] font-paper text-light drop-shadow-md">中国象棋 · 登录</p>
     </div>
     
-    <!-- 主要内容 -->
-    <div class="relative z-10 flex flex-col items-center justify-center w-full max-w-5xl px-4 py-8">
-        <!-- 标题 -->
-        <div class="mb-12 text-center transform transition-all duration-500 hover:scale-105">
-            <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-bold font-warriors text-warriors-light-dim text-shadow-lg mb-4">
-                战场中国象棋
-            </h1>
-            <p class="text-[clamp(1rem,2vw,1.25rem)] text-warriors-light-dim/80 font-warriors tracking-wider">
-                跨越千年的智慧对决
-            </p>
+    <!-- 登录框 -->
+    <div class="w-full max-w-md bg-paper/90 bg-blur rounded-xl shadow-ink p-8 transform transition-all duration-500 hover:shadow-xl">
+      <form id="loginForm" class="space-y-6">
+        <!-- 用户名输入 -->
+        <div class="space-y-2">
+          <label for="username" class="block text-ink font-paper text-lg">
+            <i class="fa fa-user-circle mr-2 text-accent"></i>用户名
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-accent">
+              <i class="fa fa-user"></i>
+            </span>
+            <input type="text" id="username" name="username" placeholder="请输入用户名" 
+                   class="w-full pl-10 pr-4 py-3 rounded-lg border border-accent/30 bg-paper/80 input-focus focus:outline-none font-paper"
+                   required>
+          </div>
         </div>
         
-        <!-- 登录卡片 -->
-        <div class="relative w-full max-w-md bg-warriors-dark/80 backdrop-blur-lg rounded-xl border-2 border-warriors-secondary/30 shadow-2xl shadow-warriors-secondary/10 overflow-hidden transform transition-all duration-500 hover:shadow-gold">
-            <!-- 卡片装饰 -->
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-warriors-secondary to-transparent"></div>
-            <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-warriors-secondary to-transparent"></div>
-            <div class="absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-transparent via-warriors-secondary to-transparent"></div>
-            <div class="absolute top-0 right-0 h-full w-1 bg-gradient-to-b from-transparent via-warriors-secondary to-transparent"></div>
-            
-            <!-- 内部内容 -->
-            <div class="p-8 md:p-10">
-                <!-- 未登录状态 -->
-                <div id="loginForm" class="space-y-8">
-                    <div class="text-center">
-                        <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-warriors text-warriors-light-dim text-shadow mb-2">将军请登录</h2>
-                        <p class="text-warriors-light-dim/70 text-sm">决胜千里，始于一棋</p>
-                    </div>
-                    
-                    <form onsubmit="handleLogin(event)" class="space-y-6">
-                        <div class="space-y-3">
-                            <label for="username" class="block text-warriors-light-dim/90 text-sm font-medium">帅旗名</label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-warriors-secondary-dim">
-                                    <i class="fa-solid fa-user"></i>
-                                </span>
-                                <input type="text" id="username" placeholder="请输入您的帅旗名" 
-                                       class="w-full pl-10 pr-4 py-3 bg-warriors-dark/60 border border-warriors-secondary/40 rounded-lg text-warriors-light-dim focus:outline-none focus:ring-2 focus:ring-warriors-secondary/60 focus:border-transparent transition-all duration-300"
-                                       required>
-                            </div>
-                        </div>
-                        
-                        <div class="space-y-3">
-                            <label for="password" class="block text-warriors-light-dim/90 text-sm font-medium">军令符</label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-warriors-secondary-dim">
-                                    <i class="fa-solid fa-shield-alt"></i>
-                                </span>
-                                <input type="password" id="password" placeholder="请输入您的军令符" 
-                                       class="w-full pl-10 pr-4 py-3 bg-warriors-dark/60 border border-warriors-secondary/40 rounded-lg text-warriors-light-dim focus:outline-none focus:ring-2 focus:ring-warriors-secondary/60 focus:border-transparent transition-all duration-300"
-                                       required>
-                            </div>
-                        </div>
-                        
-                        <div class="pt-2">
-                            <button type="submit" 
-                                    class="w-full py-3 px-4 bg-gradient-to-r from-warriors-primary to-warriors-tertiary rounded-lg text-warriors-light-dim font-warriors text-lg tracking-wider shadow-lg shadow-warriors-primary/20 hover:shadow-warriors-primary/40 transform hover:-translate-y-1 transition-all duration-300 btn-hover">
-                                擂鼓进军
-                                <i class="fa-solid fa-chess-pawn ml-2 text-warriors-secondary-dim"></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                
-                <!-- 已登录状态 -->
-                <div id="loggedIn" class="space-y-8 hidden">
-                    <div class="text-center">
-                        <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-warriors text-warriors-light-dim text-shadow mb-2">⚔️ 将军已就位 ⚔️</h2>
-                        <p class="text-warriors-light-dim/70 text-sm">准备征战沙场</p>
-                    </div>
-                    
-                    <div class="text-center py-4">
-                        <div class="w-24 h-24 mx-auto bg-warriors-dark rounded-full border-2 border-warriors-secondary flex items-center justify-center mb-4">
-                            <span id="userInitial" class="text-4xl font-warriors text-warriors-secondary-dim"></span>
-                        </div>
-                        <p class="text-xl font-warriors text-warriors-light-dim">当前军帐：<span id="loggedUser" class="text-warriors-secondary-dim"></span></p>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 gap-4 pt-2">
-                        <button onclick="enterGame()" 
-                                class="w-full py-3 px-4 bg-gradient-to-r from-warriors-primary to-warriors-tertiary rounded-lg text-warriors-light-dim font-warriors text-lg tracking-wider shadow-lg shadow-warriors-primary/20 hover:shadow-warriors-primary/40 transform hover:-translate-y-1 transition-all duration-300 btn-hover">
-                            沙场点兵
-                            <i class="fa-solid fa-chess-king ml-2 text-warriors-secondary-dim"></i>
-                        </button>
-                        <button onclick="logout()" 
-                                class="w-full py-3 px-4 bg-transparent border border-warriors-secondary/40 rounded-lg text-warriors-secondary-dim/80 font-warriors text-lg tracking-wider hover:bg-warriors-secondary/10 transform hover:-translate-y-1 transition-all duration-300">
-                            鸣金收兵
-                            <i class="fa-solid fa-sign-out-alt ml-2 text-warriors-secondary-dim"></i>
-                        </button>
-                    </div>
-                </div>
+        <!-- 密码输入 -->
+        <div class="space-y-2">
+          <label for="password" class="block text-ink font-paper text-lg">
+            <i class="fa fa-lock mr-2 text-accent"></i>密码
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-accent">
+              <i class="fa fa-lock"></i>
+            </span>
+            <input type="password" id="password" name="password" placeholder="请输入密码" 
+                   class="w-full pl-10 pr-4 py-3 rounded-lg border border-accent/30 bg-paper/80 input-focus focus:outline-none font-paper"
+                   required>
+          </div>
+        </div>
+        
+        <!-- 验证码 -->
+        <div class="space-y-2">
+          <label for="captcha" class="block text-ink font-paper text-lg">
+            <i class="fa fa-shield mr-2 text-accent"></i>验证码
+          </label>
+          <div class="flex space-x-3">
+            <div class="relative flex-1">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-accent">
+                <i class="fa fa-key"></i>
+              </span>
+              <input type="text" id="captcha" name="captcha" placeholder="请输入验证码" 
+                     class="w-full pl-10 pr-4 py-3 rounded-lg border border-accent/30 bg-paper/80 input-focus focus:outline-none font-paper"
+                     required>
             </div>
+            <div id="captchaImage" class="w-36 h-12 bg-ink rounded-lg flex items-center justify-center cursor-pointer overflow-hidden transition-all duration-300 hover:scale-105">
+              <span id="captchaText" class="text-paper font-ink text-xl tracking-wider px-4">8A3S</span>
+            </div>
+          </div>
         </div>
         
-        <!-- 底部信息 -->
-        <div class="mt-12 text-center text-warriors-light-dim/50 text-sm">
-            <p>© 2025 战场中国象棋 - 传承千年智慧</p>
+        <!-- 记住我和忘记密码 -->
+        <div class="flex items-center justify-between">
+          <label class="flex items-center space-x-2 cursor-pointer">
+            <input type="checkbox" class="w-4 h-4 text-accent border-accent rounded focus:ring-accent">
+            <span class="text-ink font-paper">记住我</span>
+          </label>
+          <a href="#" class="text-accent hover:text-accent/80 font-paper transition-colors duration-300">
+            忘记密码?
+          </a>
         </div>
+        
+        <!-- 登录按钮 -->
+        <button type="submit" id="loginBtn" 
+                class="w-full py-3 px-6 bg-accent text-paper font-ink text-xl rounded-lg btn-hover transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">
+          <i class="fa fa-sign-in mr-2"></i>登录
+        </button>
+        
+        <!-- 注册链接 -->
+        <div class="text-center">
+          <span class="text-ink font-paper">还没有账号?</span>
+          <a href="#" class="text-accent hover:text-accent/80 font-paper ml-1 transition-colors duration-300">立即注册</a>
+        </div>
+      </form>
     </div>
     
-    <script>
-        // 初始化检查登录状态
-        document.addEventListener('DOMContentLoaded', () => {
-            const loggedInUser = localStorage.getItem('chessUser');
-            if (loggedInUser) {
-                showLoggedInState(loggedInUser);
-            }
-            
-            // 视差效果
-            document.addEventListener('mousemove', (e) => {
-                const x = e.clientX / window.innerWidth - 0.5;
-                const y = e.clientY / window.innerHeight - 0.5;
-                
-                const loginCard = document.querySelector('.max-w-md');
-                loginCard.style.transform = `perspective(1000px) rotateY(${x * 5}deg) rotateX(${y * 5}deg)`;
-            });
-            
-            // 背景粒子效果
-            createParticles();
+    <!-- 页脚 -->
+    <footer class="mt-10 text-center text-light/80 font-paper text-sm">
+      <p>© 2025 水墨江南中国象棋 | 版权所有</p>
+    </footer>
+  </div>
+
+  <!-- 消息提示 -->
+  <div id="toast" class="fixed top-5 right-5 bg-ink text-paper px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-500 z-50 flex items-center">
+    <i id="toastIcon" class="fa fa-info-circle mr-2"></i>
+    <span id="toastMessage"></span>
+  </div>
+
+  <script>
+    // 生成随机验证码
+    function generateCaptcha() {
+      const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let captcha = '';
+      for (let i = 0; i < 4; i++) {
+        captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return captcha;
+    }
+    
+    // 刷新验证码
+    function refreshCaptcha() {
+      const captchaText = document.getElementById('captchaText');
+      const captcha = generateCaptcha();
+      captchaText.textContent = captcha;
+      captchaText.classList.add('refresh-animation');
+      setTimeout(() => {
+        captchaText.classList.remove('refresh-animation');
+      }, 500);
+      return captcha;
+    }
+    
+    // 显示消息提示
+    function showToast(message, type = 'info') {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toastMessage');
+      const toastIcon = document.getElementById('toastIcon');
+      
+      // 设置消息类型和图标
+      toastIcon.className = '';
+      if (type === 'success') {
+        toastIcon.className = 'fa fa-check-circle mr-2';
+        toast.classList.remove('bg-ink');
+        toast.classList.add('bg-green-600');
+      } else if (type === 'error') {
+        toastIcon.className = 'fa fa-times-circle mr-2';
+        toast.classList.remove('bg-ink');
+        toast.classList.add('bg-red-600');
+      } else {
+        toastIcon.className = 'fa fa-info-circle mr-2';
+        toast.classList.remove('bg-green-600', 'bg-red-600');
+        toast.classList.add('bg-ink');
+      }
+      
+      toastMessage.textContent = message;
+      toast.classList.remove('translate-x-full');
+      
+      setTimeout(() => {
+        toast.classList.add('translate-x-full');
+      }, 3000);
+    }
+    
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      const captchaImage = document.getElementById('captchaImage');
+      const loginForm = document.getElementById('loginForm');
+      const usernameInput = document.getElementById('username');
+      const passwordInput = document.getElementById('password');
+      const captchaInput = document.getElementById('captcha');
+      const loginBtn = document.getElementById('loginBtn');
+      
+      // 初始化验证码
+      let currentCaptcha = refreshCaptcha();
+      
+      // 点击刷新验证码
+      captchaImage.addEventListener('click', function() {
+        currentCaptcha = refreshCaptcha();
+      });
+      
+      // 登录表单提交
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value;
+        const captcha = captchaInput.value.trim().toUpperCase();
+        
+        // 简单验证
+        if (!username) {
+          usernameInput.classList.add('shake');
+          setTimeout(() => {
+            usernameInput.classList.remove('shake');
+          }, 500);
+          showToast('请输入用户名', 'error');
+          return;
+        }
+        
+        if (!password) {
+          passwordInput.classList.add('shake');
+          setTimeout(() => {
+            passwordInput.classList.remove('shake');
+          }, 500);
+          showToast('请输入密码', 'error');
+          return;
+        }
+        
+        if (!captcha || captcha !== currentCaptcha) {
+          captchaInput.classList.add('shake');
+          setTimeout(() => {
+            captchaInput.classList.remove('shake');
+          }, 500);
+          currentCaptcha = refreshCaptcha();
+          showToast('验证码不正确', 'error');
+          return;
+        }
+        
+        // 登录按钮加载状态
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>登录中...';
+        
+        // 模拟登录请求
+        setTimeout(() => {
+          // 登录成功
+          showToast('登录成功，正在跳转...', 'success');
+          
+          // 保存登录状态
+          localStorage.setItem('isLoggedIn', 'true');
+          localStorage.setItem('username', username);
+          
+          // 跳转到游戏页面
+          setTimeout(() => {
+            window.location.href = 'chinachess.html';
+          }, 1500);
+          
+        }, 1500);
+      });
+      
+      // 输入框获得焦点时的动画效果
+      const inputs = document.querySelectorAll('input');
+      inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+          this.parentElement.classList.add('scale-105');
+          this.parentElement.style.transition = 'all 0.3s ease';
         });
         
-        // 创建背景粒子效果
-        function createParticles() {
-            const body = document.body;
-            const particleCount = 50;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                const size = Math.random() * 3 + 1;
-                
-                particle.style.position = 'absolute';
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.background = i % 3 === 0 ? '#D4AF37' : '#E5E5CB';
-                particle.style.borderRadius = '50%';
-                particle.style.opacity = Math.random() * 0.5 + 0.1;
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-                particle.style.boxShadow = i % 5 === 0 ? '0 0 6px #D4AF37' : 'none';
-                particle.style.animation = `float ${Math.random() * 10 + 10}s linear infinite`;
-                
-                body.appendChild(particle);
-            }
-            
-            // 添加浮动动画
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes float {
-                    0% {
-                        transform: translateY(0) translateX(0);
-                    }
-                    33% {
-                        transform: translateY(-20px) translateX(10px);
-                    }
-                    66% {
-                        transform: translateY(-10px) translateX(-5px);
-                    }
-                    100% {
-                        transform: translateY(0) translateX(0);
-                    }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-
-        // 处理登录
-        function handleLogin(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value;
-            localStorage.setItem('chessUser', username);
-            localStorage.setItem('isLoggedIn', 'true');
-            
-            // 登录动画
-            const loginCard = document.querySelector('.max-w-md');
-            loginCard.classList.add('scale-95', 'opacity-0');
-            
-            setTimeout(() => {
-                showLoggedInState(username);
-                loginCard.classList.remove('scale-95', 'opacity-0');
-            }, 300);
-        }
-
-        // 显示已登录状态
-        function showLoggedInState(username) {
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('loggedIn').classList.remove('hidden');
-            document.getElementById('loggedUser').textContent = username;
-            document.getElementById('userInitial').textContent = username.charAt(0);
-        }
-
-        // 进入游戏
-        function enterGame() {
-            // 按钮点击动画
-            const button = event.currentTarget;
-            button.classList.add('scale-95');
-            
-            setTimeout(() => {
-                button.classList.remove('scale-95');
-                window.location.href = 'chinachess.html';
-            }, 300);
-        }
-
-        // 退出登录
-        function logout() {
-            localStorage.removeItem('chessUser');
-            localStorage.removeItem('isLoggedIn');
-            
-            // 登出动画
-            const loginCard = document.querySelector('.max-w-md');
-            loginCard.classList.add('scale-95', 'opacity-0');
-            
-            setTimeout(() => {
-                document.getElementById('loginForm').classList.remove('hidden');
-                document.getElementById('loggedIn').classList.add('hidden');
-                loginCard.classList.remove('scale-95', 'opacity-0');
-            }, 300);
-        }
-    </script>
+        input.addEventListener('blur', function() {
+          this.parentElement.classList.remove('scale-105');
+        });
+      });
+    });
+  </script>
 </body>
 </html>

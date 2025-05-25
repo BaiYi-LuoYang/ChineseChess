@@ -12,65 +12,18 @@ body {
   padding: 20px;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(45deg, #3a1c0c 0%, #6b2c10 25%, #8a3b16 50%, #6b2c10 75%, #3a1c0c 100%);
+  /* 修改页面背景为江南水乡风格图片 */
+  background-image: url('water_ink_background.png');
+  background-size: cover;
+  background-position: center;
+  color: #333; /* 文字颜色改为深灰色 */
 }
 
-/* 战场特效 */
-.battle-effects {
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  z-index: 0;
-}
-
-.smoke {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: 
-    radial-gradient(circle at 20% 40%, rgba(50,50,50,0.3) 10%, transparent 40%),
-    radial-gradient(circle at 80% 60%, rgba(70,70,70,0.3) 10%, transparent 40%);
-  animation: smoke-drift 25s linear infinite;
-  filter: blur(3px);
-}
-
-.flame-particles {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: 
-    radial-gradient(circle, rgba(255,100,0,0.3) 0%, transparent 70%),
-    repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(255,60,0,0.1) 5px, rgba(255,60,0,0.1) 10px);
-  animation: flame-flicker 0.8s infinite;
-  mix-blend-mode: screen;
-}
-
+/* 移除战场特效相关样式 */
+.battle-effects,
+.flame-particles,
 .scorch-marks {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M20,50 Q40,30 60,50 T90,40" stroke="%23331a0d" fill="none" stroke-width="2" opacity="0.1"/></svg>'),
-    url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="70" r="15" fill="%23331a0d" opacity="0.1"/></svg>');
-  background-size: 200px;
-  animation: scorch-move 40s linear infinite;
-}
-
-@keyframes smoke-drift {
-  0% { background-position: 0 0, 100% 100%; }
-  100% { background-position: 1000px 500px, -1000px -500px; }
-}
-
-@keyframes flame-flicker {
-  0%, 100% { opacity: 0.8; }
-  50% { opacity: 0.5; }
-}
-
-@keyframes scorch-move {
-  from { background-position: 0 0; }
-  to { background-position: 1000px 500px; }
+  display: none;
 }
 
 /* 棋盘样式 */
@@ -79,74 +32,34 @@ body {
   height: 610px;
   margin: 1rem auto;
   position: relative;
-  border: 4px solid;
-  border-image: linear-gradient(45deg, #ffd700 30%, #ffec80 50%, #ffd700 70%);
-  border-image-slice: 1;
-  background: rgba(30, 15, 5, 0.95);
+  border: 4px solid #888; /* 边框颜色改为灰色 */
+  border-image: none; /* 移除边框渐变效果 */
+  /* 修改棋盘背景为江南水乡风格图片 */
+  background-image: url('jiangnan_water_town_texture.jfif');
+  background-size: cover;
+  background-position: center;
   border-radius: 18px;
   padding: 35px;
   overflow: visible;
   box-shadow: 
-    0 0 40px rgba(255,215,0,0.5),
-    inset 0 0 30px rgba(255,215,0,0.3);
+    0 0 40px rgba(136, 136, 136, 0.5), /* 阴影颜色改为灰色 */
+    inset 0 0 30px rgba(136, 136, 136, 0.3); /* 内阴影颜色改为灰色 */
   z-index: 2;
 }
 
 /* 装饰元素 */
 .gold-trim {
-  position: absolute;
-  height: 12px;
-  left: -15px;
-  right: -15px;
-  background: linear-gradient(90deg, 
-    transparent 15%,
-    #ffd700 15%, 
-    #fff3b8 50%,
-    #ffd700 85%,
-    transparent 85%);
-  box-shadow: 0 2px 8px rgba(255,215,0,0.3);
-  z-index: 1;
+  display: none; /* 移除金色装饰条 */
 }
-.gold-trim.top { top: -15px; }
-.gold-trim.bottom { bottom: -15px; }
 
 .tassels {
-  position: absolute;
-  top: 50px;
-  bottom: 50px;
-  width: 20px;
-  background-image: 
-    repeating-linear-gradient(180deg,
-      transparent 0,
-      transparent 8px,
-      #ffd700 8px,
-      #ffd700 16px);
-  z-index: 0;
-}
-.tassels::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 30px;
-  background: linear-gradient(0deg, 
-    #fff3b8 0%,
-    #ffd700 20%,
-    #8a6d3b 100%);
-  clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
-}
-.tassels.left {
-  left: -25px;
-  transform: rotate(180deg);
-}
-.tassels.right {
-  right: -25px;
+  display: none; /* 移除流苏装饰 */
 }
 
 /* 棋盘线 */
 .grid-line {
   position: absolute;
-  background: #c7a97b;
+  background: #666; /* 棋盘线颜色改为深灰色 */
 }
 .horizontal {
   height: 2px;
@@ -168,7 +81,7 @@ body {
 .diagonal-line {
   position: absolute;
   height: 2px;
-  background: #c7a97b;
+  background: #666; /* 斜线颜色改为深灰色 */
   transform-origin: left center;
 }
 
@@ -188,9 +101,8 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  border: 2px solid #ffd700;
+  border: 2px solid #888; /* 鼠标悬停边框颜色改为灰色 */
   border-radius: 50%;
-  animation: glow 1.5s infinite;
 }
 
 /* 棋子 */
@@ -198,23 +110,23 @@ body {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #c4a484 0%, #8b4513 100%);
+  background: radial-gradient(circle at 30% 30%, #ccc 0%, #999 100%); /* 棋子背景改为灰色渐变 */
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 24px;
   transition: all 0.2s ease;
-  border: 2px solid #543210;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  border: 2px solid #666; /* 棋子边框颜色改为深灰色 */
+  box-shadow: 0 4px 12px rgba(102, 102, 102, 0.5); /* 棋子阴影颜色改为深灰色 */
   position: relative;
   z-index: 3;
 }
 .piece:hover {
   transform: scale(1.15);
-  box-shadow: 0 8px 15px rgba(0,0,0,0.7);
+  box-shadow: 0 8px 15px rgba(102, 102, 102, 0.7); /* 鼠标悬停阴影颜色改为深灰色 */
 }
-.red { color: #8a2828; text-shadow: 0 0 8px rgba(255,60,0,0.5); }
-.black { color: #333; text-shadow: 0 0 8px rgba(0,0,0,0.5); }
+.red { color: #b30000; text-shadow: 0 0 8px rgba(179, 0, 0, 0.5); } /* 红方棋子颜色改为暗红色 */
+.black { color: #000; text-shadow: 0 0 8px rgba(0, 0, 0, 0.5); }
 
 /* 控制面板 */
 #controls {
@@ -227,57 +139,39 @@ body {
   z-index: 2;
 }
 button {
-  background: #5d432c;
-  color: #ffd700;
+  background: #666; /* 按钮背景颜色改为深灰色 */
+  color: #fff; /* 按钮文字颜色改为白色 */
   border: none;
   padding: 0.8rem 1.5rem;
   border-radius: 25px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 6px rgba(102, 102, 102, 0.3); /* 按钮阴影颜色改为深灰色 */
 }
 button:hover {
-  background: #7a5c40;
+  background: #888; /* 鼠标悬停按钮背景颜色改为灰色 */
   transform: translateY(-2px);
-  box-shadow: 0 6px 8px rgba(0,0,0,0.5);
+  box-shadow: 0 6px 8px rgba(102, 102, 102, 0.5); /* 鼠标悬停按钮阴影颜色改为深灰色 */
 }
 #player-turn {
-  color: #ffd700;
+  color: #fff; /* 玩家提示文字颜色改为白色 */
   font-size: 1.2em;
   padding: 0 1rem;
-  background: rgba(0,0,0,0.5);
+  background: rgba(102, 102, 102, 0.5); /* 玩家提示背景颜色改为深灰色半透明 */
   border-radius: 15px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 4px rgba(102, 102, 102, 0.3); /* 玩家提示阴影颜色改为深灰色 */
 }
 
 /* 新增计时器显示样式 */
 #timer-display {
-  color: #ffd700;
+  color: #fff; /* 计时器文字颜色改为白色 */
   font-size: 1.2em;
   padding: 0 1rem;
-  background: rgba(0,0,0,0.5);
+  background: rgba(102, 102, 102, 0.5); /* 计时器背景颜色改为深灰色半透明 */
   border-radius: 15px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 4px rgba(102, 102, 102, 0.3); /* 计时器阴影颜色改为深灰色 */
 }
 
-/* 动画 */
-@keyframes glow {
-  0%, 100% { opacity: 0.8; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(1.1); }
-}
-.piece.selected {
-  animation: pulse 1.5s infinite;
-  border: 2px solid #ffd700;
-  box-shadow: 0 0 15px rgba(255,215,0,0.5);
-}
-@keyframes pulse {
-  0% { transform: scale(1.1); }
-  50% { transform: scale(1.15); }
-  100% { transform: scale(1.1); }
-}
-.invalid-move {
-  animation: shake 0.5s;
-}
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(5px); }
@@ -296,22 +190,14 @@ button:hover {
 .character-animation img {
   width: 100%;
   height: auto;
-  filter: drop-shadow(0 0 12px rgba(255,215,0,0.5));
-}
-.floating {
-  animation: float 3s ease-in-out infinite;
-}
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-20px); }
+  filter: drop-shadow(0 0 12px rgba(136, 136, 136, 0.5)); /* 角色阴影颜色改为灰色 */
 }
 
 /* 教程相关样式 */
 #tutorial-btn {
   position: absolute;
   right: 20px;
-  top: 20px;
-  background: #8a6d3b !important;
+  background: #666 !important; /* 教程按钮背景颜色改为深灰色 */
 }
 .modal {
   display: none;
@@ -321,39 +207,51 @@ button:hover {
   top: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
 }
 .modal-content {
-  background: #5d432c;
+  background: #666; /* 模态框背景颜色改为深灰色 */
   margin: 5% auto;
   padding: 20px;
   width: 600px;
   border-radius: 15px;
-  border: 2px solid #ffd700;
-  color: #ffec80;
+  border: 2px solid #888; /* 模态框边框颜色改为灰色 */
+  color: #fff; /* 模态框文字颜色改为白色 */
 }
 .tab {
-  border-bottom: 1px solid #ffd700;
+  border-bottom: 1px solid #888; /* 标签页底部边框颜色改为灰色 */
   margin: 15px 0;
 }
 .tab button {
   background: none;
   border: none;
-  color: #ffd700;
+  color: #fff; /* 标签页按钮文字颜色改为白色 */
   padding: 10px 20px;
   transition: all 0.3s;
 }
-.tab button:hover { background: #7a5c40; }
-.tab button.active { border-bottom: 3px solid #ff4444; }
+.tab button:hover { background: #888; } /* 鼠标悬停标签页按钮背景颜色改为灰色 */
+.tab button.active { border-bottom: 3px solid #154272; } /* 激活标签页按钮底部边框颜色改为暗红色 */
 .tabcontent {
   padding: 15px;
   min-height: 200px;
   line-height: 1.6;
 }
-.tabcontent h3 { color: #ff4444; margin: 10px 0; }
+.tabcontent h3 { color: #0b417a; margin: 10px 0; } /* 标签页内容标题颜色改为暗红色 */
 .close {
-  color: #ffd700;
+  color: #fff; /* 关闭按钮文字颜色改为白色 */
   float: right;
   font-size: 28px;
   cursor: pointer;
+}
+
+/* 闪烁动画 */
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* 应用闪烁动画的类 */
+.blink-animation {
+  animation: blink 1s infinite;
 }

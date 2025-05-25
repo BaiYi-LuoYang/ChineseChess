@@ -1,9 +1,8 @@
-<!-- 中国传统象棋.html -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>战场中国象棋</title>
+  <title>水墨江南中国象棋</title>
   <link rel="stylesheet" href="chinachess.css">
 </head>
 <body>
@@ -15,28 +14,24 @@
   </div>
 
   <!-- 标题 -->
-  <h1>战场中国象棋</h1>
+  <h1>水墨江南中国象棋</h1>
 
   <!-- 控制面板 -->
   <div id="controls">
+    <button id="start-game-btn" onclick="startGame()">开始游戏</button>
     <button onclick="restartGame()">重新开始</button>
     <button onclick="undoMove()">悔棋</button>
+    <button id="tutorial-btn" onclick="showTutorial()">新手教程</button>
+    <button id="music-btn" onclick="toggleMusic()">播放/暂停音乐</button>
     <div id="player-turn">
       当前玩家：<span id="current-player">红方</span>
     </div>
-    <!-- 新增计时器显示 -->
+    <!-- 计时器显示 -->
     <div id="timer-display">剩余时间：<span id="timer">30</span> 秒</div>
-    <!-- 新增教程按钮 -->
-    <button id="tutorial-btn" onclick="showTutorial()">新手教程</button>
   </div>
 
   <!-- 棋盘 -->
   <div id="chessboard">
-    <div class="gold-trim top"></div>
-    <div class="gold-trim bottom"></div>
-    <div class="tassels left"></div>
-    <div class="tassels right"></div>
-
     <!-- 角色动画 -->
     <div class="character-animation left">
       <img src="奶龙.jfif" class="floating" alt="奶龙">
@@ -57,6 +52,7 @@
         <button class="tablinks active" onclick="openTab(event, 'basic')">基础规则</button>
         <button class="tablinks" onclick="openTab(event, 'pieces')">棋子走法</button>
         <button class="tablinks" onclick="openTab(event, 'victory')">胜利条件</button>
+        <button class="tablinks" onclick="openVideo()">观看教程视频</button>
       </div>
 
       <!-- 内容区域 -->
@@ -84,8 +80,20 @@
         <h3>特殊规则</h3>
         <p>将帅不能直接照面，需间隔至少一个棋子</p>
       </div>
+
+      <!-- 视频容器 -->
+      <div id="video-container" style="display: none;">
+        <video id="tutorial-video" width="500" controls>
+          <source src="chinachess.mp4" type="video/mp4">
+          您的浏览器不支持视频播放。
+        </video>
+        <button id="play-pause-btn" onclick="toggleVideo()">播放</button>
+      </div>
     </div>
   </div>
+
+  <!-- 音频元素 -->
+  <audio id="game-music" src="TeamfightTactics.flac" autoplay loop></audio>
 
   <script src="chinachess.js"></script>
 </body>
