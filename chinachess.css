@@ -216,6 +216,8 @@ button:hover {
   color: #fff; /* 模态框文字颜色改为白色 */
   position: absolute; /* 确保模态框内容也是绝对定位 */
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* 添加阴影增强可见性 */
+  /* 使模态框内容可以拖动 */
+  cursor: move;
 }
 .tab {
   border-bottom: 1px solid #888; /* 标签页底部边框颜色改为灰色 */
@@ -241,6 +243,9 @@ button:hover {
   float: right;
   font-size: 28px;
   cursor: pointer;
+  /* 防止关闭按钮触发拖动 */
+  cursor: pointer;
+  pointer-events: all;
 }
 
 /* 闪烁动画 */

@@ -520,24 +520,30 @@ function toggleVideo() {
 function initDraggable() {
   const modal = document.getElementById('tutorial-modal');
   const modalContent = document.querySelector('.modal-content');
-  const header = document.querySelector('.modal-content h2');
   
   // 只有在模态框存在时才设置拖动
-  if (modal && header) {
+  if (modal && modalContent) {
     // 设置模态框为绝对定位以便拖动
     modal.style.position = 'absolute';
     modal.style.zIndex = '999';
     
-    // 添加拖动事件
-    header.style.cursor = 'move';
-    header.addEventListener('mousedown', startDrag);
+    // 添加拖动事件到整个模态框内容
+    modalContent.style.cursor = 'move';
+    modalContent.addEventListener('mousedown', startDrag);
     
-    // 阻止标题文本被选中
-    header.style.userSelect = 'none';
+    // 确保关闭按钮不会触发拖动
+    const closeBtn = document.querySelector('.close');
+    if (closeBtn) {
+      closeBtn.style.pointerEvents = 'auto';
+      closeBtn.style.cursor = 'pointer';
+    }
   }
 }
 
 function startDrag(e) {
+  // 防止点击关闭按钮时触发拖动
+  if (e.target.classList.contains('close')) return;
+  
   const modal = document.getElementById('tutorial-modal');
   isDragging = true;
   draggedElement = modal;
