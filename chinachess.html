@@ -1,37 +1,104 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
   <title>水墨江南中国象棋</title>
   <link rel="stylesheet" href="chinachess.css">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#2D2A32',       // 墨色
+            paper: '#F5F2E9',     // 宣纸色
+            red: '#C8102E',       // 中国红
+            gold: '#D4AF37',      // 金色
+            light: '#F9F6EE',     // 浅米色
+            dark: '#8B4513',      // 深褐色
+            accent: '#A67C52',    // 棕褐色
+            water: '#4A6FA5',     // 水色
+          },
+          fontFamily: {
+            ink: ['"Ma Shan Zheng"', 'cursive'],
+            paper: ['"ZCOOL XiaoWei"', 'serif']
+          },
+        },
+      }
+    }
+  </script>
+
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .ink-wash {
+        background-blend-mode: overlay;
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+      .brush-border {
+        position: relative;
+      }
+      .brush-border::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, rgba(166, 124, 82, 0) 0%, rgba(166, 124, 82, 0.8) 50%, rgba(166, 124, 82, 0) 100%);
+      }
+      .scroll-smooth {
+        scroll-behavior: smooth;
+      }
+      .shadow-ink {
+        box-shadow: 0 4px 15px rgba(45, 42, 50, 0.2);
+      }
+    }
+  </style>
 </head>
-<body>
-  <!-- 战场特效 -->
-  <div class="battle-effects">
-    <div class="smoke"></div>
-    <div class="flame-particles"></div>
-    <div class="scorch-marks"></div>
+
+<body class="min-h-screen bg-paper overflow-x-hidden scroll-smooth">
+  <!-- 背景图片 -->
+  <div class="fixed inset-0 z-0 bg-cover bg-center ink-wash" style="background-image: url('./water_ink_background.jpg');">
+    <!-- 水墨纹理叠加 -->
+    <div class="absolute inset-0 bg-black/20"></div>
+  </div>
+
+  <!-- 用户信息显示 -->
+  <div id="user-info"
+    class="absolute top-5 right-5 bg-ink/80 text-paper px-4 py-2 rounded-lg shadow-lg flex items-center space-x-2 z-50">
+    <span id="username-display" class="font-paper text-lg"></span>
+    <img id="avatar-display" class="w-8 h-8 rounded-full border-2 border-paper" src="" alt="Avatar">
   </div>
 
   <!-- 标题 -->
-  <h1>水墨江南中国象棋</h1>
+  <h1 class="relative z-10 text-center text-[clamp(2.5rem,6vw,4rem)] font-ink text-paper drop-shadow-lg brush-border inline-block mx-auto mt-10">水墨江南中国象棋</h1>
 
   <!-- 控制面板 -->
-  <div id="controls">
-    <button id="start-game-btn" onclick="startGame()">开始游戏</button>
-    <button onclick="restartGame()">重新开始</button>
-    <button onclick="undoMove()">悔棋</button>
-    <button id="tutorial-btn" onclick="showTutorial()">新手教程</button>
-    <button id="music-btn" onclick="toggleMusic()">播放/暂停音乐</button>
-    <div id="player-turn">
+  <div id="controls" class="relative z-10 flex flex-wrap justify-center gap-4 mt-6 mx-4">
+    <button id="start-game-btn" onclick="startGame()" class="px-6 py-2 bg-accent text-paper font-ink rounded-lg btn-hover">开始游戏</button>
+    <button onclick="restartGame()" class="px-6 py-2 bg-accent text-paper font-ink rounded-lg btn-hover">重新开始</button>
+    <button onclick="undoMove()" class="px-6 py-2 bg-accent text-paper font-ink rounded-lg btn-hover">悔棋</button>
+    <button id="tutorial-btn" onclick="showTutorial()" class="px-6 py-2 bg-accent text-paper font-ink rounded-lg btn-hover">新手教程</button>
+    <button id="music-btn" onclick="toggleMusic()" class="px-6 py-2 bg-accent text-paper font-ink rounded-lg btn-hover">播放/暂停音乐</button>
+    <div id="player-turn" class="px-6 py-2 bg-ink/80 text-paper font-paper rounded-lg">
       当前玩家：<span id="current-player">红方</span>
     </div>
     <!-- 计时器显示 -->
-    <div id="timer-display">剩余时间：<span id="timer">30</span> 秒</div>
+    <div id="timer-display" class="px-6 py-2 bg-ink/80 text-paper font-paper rounded-lg">
+      剩余时间：<span id="timer">30</span> 秒
+    </div>
   </div>
 
   <!-- 棋盘 -->
-  <div id="chessboard">
+  <div id="chessboard" class="relative z-10 mx-auto mt-8 max-w-3xl">
     <!-- 角色动画 -->
     <div class="character-animation left">
       <img src="奶龙.jfif" class="floating" alt="奶龙">
@@ -51,7 +118,7 @@
     <div class="modal-content">
       <span class="close" onclick="closeTutorial()">&times;</span>
       <h2>象棋新手教程</h2>
-      
+
       <!-- 标签页 -->
       <div class="tab">
         <button class="tablinks active" onclick="openTab(event, 'basic')">基础规则</button>
@@ -111,5 +178,31 @@
   <audio id="game-music" src="TeamfightTactics.flac" autoplay loop></audio>
 
   <script src="chinachess.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      if (isLoggedIn === 'true') {
+        const username = localStorage.getItem('username');
+        const avatar = localStorage.getItem('avatar');
+
+        const usernameDisplay = document.getElementById('username-display');
+        const avatarDisplay = document.getElementById('avatar-display');
+
+        usernameDisplay.textContent = `欢迎你，${username}`;
+        
+        // 检查头像是否是DataURL格式
+        if (avatar.startsWith('data:image')) {
+          avatarDisplay.src = avatar;
+        } else {
+          // 如果不是DataURL格式，使用图片路径
+          avatarDisplay.src = avatar;
+        }
+      } else {
+        // 如果未登录，跳转到登录页面
+        window.location.href = 'login.html';
+      }
+    });
+  </script>
 </body>
+
 </html>

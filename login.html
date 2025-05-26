@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome -->
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-  
+
   <!-- 配置Tailwind自定义颜色和字体 -->
   <script>
     tailwind.config = {
@@ -32,7 +33,7 @@
       }
     }
   </script>
-  
+
   <!-- 自定义工具类 -->
   <style type="text/tailwindcss">
     @layer utilities {
@@ -62,54 +63,70 @@
         box-shadow: 0 4px 15px rgba(45, 42, 50, 0.2);
       }
     }
-  </style>
-  
-  <!-- 引入中文字体 -->
-  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
-  
-  <style>
+
     /* 水墨风格背景动画 */
     @keyframes inkSpread {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
     }
-    
+
     /* 验证码动画 */
     @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-      20%, 40%, 60%, 80% { transform: translateX(5px); }
+      0%, 100% {
+        transform: translateX(0);
+      }
+
+      10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+      }
+
+      20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+      }
     }
-    
+
     .shake {
       animation: shake 0.5s ease-in-out;
     }
-    
+
     /* 输入框聚焦效果 */
     .input-focus:focus {
       border-color: #A67C52;
       box-shadow: 0 0 0 3px rgba(166, 124, 82, 0.3);
       transition: all 0.3s ease;
     }
-    
+
     /* 按钮悬停效果 */
     .btn-hover:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(166, 124, 82, 0.4);
       transition: all 0.3s ease;
     }
-    
+
     /* 验证码刷新动画 */
     .refresh-animation {
       animation: rotate 0.5s ease-in-out;
     }
-    
+
     @keyframes rotate {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
-    
+
     /* 背景模糊效果 */
     .bg-blur {
       backdrop-filter: blur(8px);
@@ -117,6 +134,7 @@
     }
   </style>
 </head>
+
 <body class="min-h-screen bg-paper overflow-x-hidden scroll-smooth">
   <!-- 背景图片 -->
   <div class="fixed inset-0 z-0 bg-cover bg-center ink-wash" style="background-image: url('./water_ink_background.jpg');">
@@ -131,7 +149,7 @@
       <h1 class="text-[clamp(2.5rem,6vw,4rem)] font-ink text-paper drop-shadow-lg brush-border inline-block">水墨江南</h1>
       <p class="mt-4 text-[clamp(1rem,2vw,1.25rem)] font-paper text-light drop-shadow-md">中国象棋 · 登录</p>
     </div>
-    
+
     <!-- 登录框 -->
     <div class="w-full max-w-md bg-paper/90 bg-blur rounded-xl shadow-ink p-8 transform transition-all duration-500 hover:shadow-xl">
       <form id="loginForm" class="space-y-6">
@@ -144,12 +162,12 @@
             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-accent">
               <i class="fa fa-user"></i>
             </span>
-            <input type="text" id="username" name="username" placeholder="请输入用户名" 
-                   class="w-full pl-10 pr-4 py-3 rounded-lg border border-accent/30 bg-paper/80 input-focus focus:outline-none font-paper"
-                   required>
+            <input type="text" id="username" name="username" placeholder="请输入用户名"
+              class="w-full pl-10 pr-4 py-3 rounded-lg border border-accent/30 bg-paper/80 input-focus focus:outline-none font-paper"
+              required>
           </div>
         </div>
-        
+
         <!-- 密码输入 -->
         <div class="space-y-2">
           <label for="password" class="block text-ink font-paper text-lg">
@@ -159,12 +177,28 @@
             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-accent">
               <i class="fa fa-lock"></i>
             </span>
-            <input type="password" id="password" name="password" placeholder="请输入密码" 
-                   class="w-full pl-10 pr-4 py-3 rounded-lg border border-accent/30 bg-paper/80 input-focus focus:outline-none font-paper"
-                   required>
+            <input type="password" id="password" name="password" placeholder="请输入密码"
+              class="w-full pl-10 pr-4 py-3 rounded-lg border border-accent/30 bg-paper/80 input-focus focus:outline-none font-paper"
+              required>
           </div>
         </div>
-        
+
+        <!-- 头像上传 -->
+        <div class="space-y-2">
+          <label for="avatar" class="block text-ink font-paper text-lg">
+            <i class="fa fa-image mr-2 text-accent"></i>上传头像
+          </label>
+          <div class="flex items-center space-x-4">
+            <div class="relative">
+              <input type="file" id="avatar" name="avatar" accept="image/*"
+                class="w-full pl-10 pr-4 py-3 rounded-lg border border-accent/30 bg-paper/80 input-focus focus:outline-none font-paper">
+            </div>
+            <div id="avatarPreview" class="w-12 h-12 rounded-full border-2 border-accent overflow-hidden bg-paper">
+              <img id="previewImage" src="dragon.webp" alt="Avatar Preview" class="w-full h-full object-cover">
+            </div>
+          </div>
+        </div>
+
         <!-- 验证码 -->
         <div class="space-y-2">
           <label for="captcha" class="block text-ink font-paper text-lg">
@@ -175,16 +209,17 @@
               <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-accent">
                 <i class="fa fa-key"></i>
               </span>
-              <input type="text" id="captcha" name="captcha" placeholder="请输入验证码" 
-                     class="w-full pl-10 pr-4 py-3 rounded-lg border border-accent/30 bg-paper/80 input-focus focus:outline-none font-paper"
-                     required>
+              <input type="text" id="captcha" name="captcha" placeholder="请输入验证码"
+                class="w-full pl-10 pr-4 py-3 rounded-lg border border-accent/30 bg-paper/80 input-focus focus:outline-none font-paper"
+                required>
             </div>
-            <div id="captchaImage" class="w-36 h-12 bg-ink rounded-lg flex items-center justify-center cursor-pointer overflow-hidden transition-all duration-300 hover:scale-105">
+            <div id="captchaImage"
+              class="w-36 h-12 bg-ink rounded-lg flex items-center justify-center cursor-pointer overflow-hidden transition-all duration-300 hover:scale-105">
               <span id="captchaText" class="text-paper font-ink text-xl tracking-wider px-4">8A3S</span>
             </div>
           </div>
         </div>
-        
+
         <!-- 记住我和忘记密码 -->
         <div class="flex items-center justify-between">
           <label class="flex items-center space-x-2 cursor-pointer">
@@ -195,13 +230,13 @@
             忘记密码?
           </a>
         </div>
-        
+
         <!-- 登录按钮 -->
-        <button type="submit" id="loginBtn" 
-                class="w-full py-3 px-6 bg-accent text-paper font-ink text-xl rounded-lg btn-hover transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">
+        <button type="submit" id="loginBtn"
+          class="w-full py-3 px-6 bg-accent text-paper font-ink text-xl rounded-lg btn-hover transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">
           <i class="fa fa-sign-in mr-2"></i>登录
         </button>
-        
+
         <!-- 注册链接 -->
         <div class="text-center">
           <span class="text-ink font-paper">还没有账号?</span>
@@ -209,7 +244,7 @@
         </div>
       </form>
     </div>
-    
+
     <!-- 页脚 -->
     <footer class="mt-10 text-center text-light/80 font-paper text-sm">
       <p>© 2025 水墨江南中国象棋 | 版权所有</p>
@@ -217,7 +252,8 @@
   </div>
 
   <!-- 消息提示 -->
-  <div id="toast" class="fixed top-5 right-5 bg-ink text-paper px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-500 z-50 flex items-center">
+  <div id="toast"
+    class="fixed top-5 right-5 bg-ink text-paper px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-500 z-50 flex items-center">
     <i id="toastIcon" class="fa fa-info-circle mr-2"></i>
     <span id="toastMessage"></span>
   </div>
@@ -232,7 +268,7 @@
       }
       return captcha;
     }
-    
+
     // 刷新验证码
     function refreshCaptcha() {
       const captchaText = document.getElementById('captchaText');
@@ -244,13 +280,13 @@
       }, 500);
       return captcha;
     }
-    
+
     // 显示消息提示
     function showToast(message, type = 'info') {
       const toast = document.getElementById('toast');
       const toastMessage = document.getElementById('toastMessage');
       const toastIcon = document.getElementById('toastIcon');
-      
+
       // 设置消息类型和图标
       toastIcon.className = '';
       if (type === 'success') {
@@ -266,40 +302,64 @@
         toast.classList.remove('bg-green-600', 'bg-red-600');
         toast.classList.add('bg-ink');
       }
-      
+
       toastMessage.textContent = message;
       toast.classList.remove('translate-x-full');
-      
+
       setTimeout(() => {
         toast.classList.add('translate-x-full');
       }, 3000);
     }
-    
+
+    // 预览头像
+    function previewAvatar(event) {
+      const input = event.target;
+      const preview = document.getElementById('previewImage');
+      
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+        }
+        
+        reader.readAsDataURL(input.files[0]);
+      } else {
+        // 如果用户取消选择文件，恢复默认头像
+        preview.src = 'dragon.webp';
+      }
+    }
+
     // 页面加载完成后初始化
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const captchaImage = document.getElementById('captchaImage');
       const loginForm = document.getElementById('loginForm');
       const usernameInput = document.getElementById('username');
       const passwordInput = document.getElementById('password');
       const captchaInput = document.getElementById('captcha');
+      const avatarInput = document.getElementById('avatar');
       const loginBtn = document.getElementById('loginBtn');
-      
+
       // 初始化验证码
       let currentCaptcha = refreshCaptcha();
-      
+
       // 点击刷新验证码
-      captchaImage.addEventListener('click', function() {
+      captchaImage.addEventListener('click', function () {
         currentCaptcha = refreshCaptcha();
       });
-      
+
+      // 监听头像选择
+      avatarInput.addEventListener('change', previewAvatar);
+
       // 登录表单提交
-      loginForm.addEventListener('submit', function(e) {
+      loginForm.addEventListener('submit', function (e) {
         e.preventDefault();
-        
+
         const username = usernameInput.value.trim();
         const password = passwordInput.value;
         const captcha = captchaInput.value.trim().toUpperCase();
-        
+        const avatar = avatarInput.files[0];
+
         // 简单验证
         if (!username) {
           usernameInput.classList.add('shake');
@@ -309,7 +369,7 @@
           showToast('请输入用户名', 'error');
           return;
         }
-        
+
         if (!password) {
           passwordInput.classList.add('shake');
           setTimeout(() => {
@@ -318,7 +378,7 @@
           showToast('请输入密码', 'error');
           return;
         }
-        
+
         if (!captcha || captcha !== currentCaptcha) {
           captchaInput.classList.add('shake');
           setTimeout(() => {
@@ -328,41 +388,66 @@
           showToast('验证码不正确', 'error');
           return;
         }
-        
+
         // 登录按钮加载状态
         loginBtn.disabled = true;
         loginBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>登录中...';
-        
-        // 模拟登录请求
-        setTimeout(() => {
-          // 登录成功
-          showToast('登录成功，正在跳转...', 'success');
-          
-          // 保存登录状态
+
+        // 读取头像文件
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          const avatarData = event.target.result;
+
+          // 保存登录状态和头像数据
           localStorage.setItem('isLoggedIn', 'true');
           localStorage.setItem('username', username);
-          
-          // 跳转到游戏页面
+          localStorage.setItem('avatar', avatarData);
+
+          // 模拟登录请求
           setTimeout(() => {
-            window.location.href = 'chinachess.html';
+            // 登录成功
+            showToast('登录成功，正在跳转...', 'success');
+
+            // 跳转到游戏页面
+            setTimeout(() => {
+              window.location.href = 'chinachess.html';
+            }, 1500);
           }, 1500);
-          
-        }, 1500);
+        };
+
+        if (avatar) {
+          reader.readAsDataURL(avatar);
+        } else {
+          // 如果用户没有上传头像，使用默认头像
+          localStorage.setItem('avatar', 'dragon.webp');
+
+          // 模拟登录请求
+          setTimeout(() => {
+            // 登录成功
+            showToast('登录成功，正在跳转...', 'success');
+
+            // 跳转到游戏页面
+            setTimeout(() => {
+              window.location.href = 'chinachess.html';
+            }, 1500);
+          }, 1500);
+        }
       });
-      
+
       // 输入框获得焦点时的动画效果
       const inputs = document.querySelectorAll('input');
       inputs.forEach(input => {
-        input.addEventListener('focus', function() {
+        input.addEventListener('focus', function () {
           this.parentElement.classList.add('scale-105');
           this.parentElement.style.transition = 'all 0.3s ease';
         });
-        
-        input.addEventListener('blur', function() {
+
+        input.addEventListener('blur', function () {
           this.parentElement.classList.remove('scale-105');
         });
       });
     });
   </script>
 </body>
+
 </html>
