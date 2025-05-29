@@ -1,3 +1,173 @@
+// 常量定义
+const ELEPHANT_STOMP_IMAGE = 'elephant_stomp.png';
+const HORSE_STOMP_IMAGE = 'horse_stomp.png';
+const SOLDIER_STOMP_IMAGE = 'soldier_stomp.png';
+const CAR_STOMP_IMAGE = 'car_stomp.png';
+const CANNON_STOMP_IMAGE = 'fort.png';
+
+// 全局变量
+let board = document.getElementById('chessboard');
+let selectedPiece = null;
+let selectedCell = null;
+let currentPlayer = 'red';
+let playerDisplay = document.getElementById('current-player');
+let timer = null;
+let remainingTime = 30;
+let timerDisplay = document.getElementById('timer');
+let moveHistory = [];
+let music = document.getElementById('game-music');
+let musicBtn = document.getElementById('music-btn');
+let pieceVideo = document.getElementById('piece-video');
+let pieceVideoContainer = document.getElementById('piece-video-container');
+let tutorialVideo = document.getElementById('tutorial-video');
+let playPauseBtn = document.getElementById('play-pause-btn');
+let videoContainer = document.getElementById('video-container');
+let tutorialModal = document.getElementById('tutorial-modal');
+let isDragging = false;
+let draggedElement = null;
+let offsetX, offsetY;
+let musicWasPlaying = false;
+
+// 初始棋子布局
+const initialPieces = {
+  "0,0": { text: "俥", color: "black" },
+  "1,0": { text: "傌", color: "black" },
+  "2,0": { text: "象", color: "black" },
+  "3,0": { text: "士", color: "black" },
+  "4,0": { text: "將", color: "black" },
+  "5,0": { text: "士", color: "black" },
+  "6,0": { text: "象", color: "black" },
+  "7,0": { text: "傌", color: "black" },
+  "8,0": { text: "俥", color: "black" },
+  "1,2": { text: "砲", color: "black" },
+  "7,2": { text: "砲", color: "black" },
+  "0,3": { text: "卒", color: "black" },
+  "2,3": { text: "卒", color: "black" },
+  "4,3": { text: "卒", color: "black" },
+  "6,3": { text: "卒", color: "black" },
+  "8,3": { text: "卒", color: "black" },
+  "0,9": { text: "車", color: "red" },
+  "1,9": { text: "馬", color: "red" },
+  "2,9": { text: "相", color: "red" },
+  "3,9": { text: "仕", color: "red" },
+  "4,9": { text: "帥", color: "red" },
+  "5,9": { text: "仕", color: "red" },
+  "6,9": { text: "相", color: "red" },
+  "7,9": { text: "馬", color: "red" },
+  "8,9": { text: "車", color: "red" },
+  "1,7": { text: "炮", color: "red" },
+  "7,7": { text: "炮", color: "red" },
+  "0,6": { text: "兵", color: "red" },
+  "2,6": { text: "兵", color: "red" },
+  "4,6": { text: "兵", color: "red" },
+  "6,6": { text: "兵", color: "red" },
+  "8,6": { text: "兵", color: "red" }
+};
+
+// 移动规则验证器
+const moveValidators = {
+  "帥": function(fromX, fromY, toX, toY) {
+    return Math.abs(toX - fromX) + Math.abs(toY - fromY) === 1 && toX >= 3 && toX <= 5 && ((fromY <= 2 && toY <= 2) || (fromY >= 7 && toY >= 7));
+  },
+  "將": function(fromX, fromY, toX, toY) {
+    return Math.abs(toX - fromX) + Math.abs(toY - fromY) === 1 && toX >= 3 && toX <= 5 && ((fromY <= 2 && toY <= 2) || (fromY >= 7 && toY >= 7));
+  },
+  "仕": function(fromX, fromY, toX, toY) {
+    return Math.abs(toX - fromX) === 1 && Math.abs(toY - fromY) === 1 && toX >= 3 && toX <= 5 && ((fromY <= 2 && toY <= 2) || (fromY >= 7 && toY >= 7));
+  },
+  "士": function(fromX, fromY, toX, toY) {
+    return Math.abs(toX - fromX) === 1 && Math.abs(toY - fromY) === 1 && toX >= 3 && toX <= 5 && ((fromY <= 2 && toY <= 2) || (fromY >= 7 && toY >= 7));
+  },
+  "相": function(fromX, fromY, toX, toY) {
+    return Math.abs(toX - fromX) === 2 && Math.abs(toY - fromY) === 2 && toY >= 5 && !document.querySelector(`[data-x="${(fromX + toX) / 2}"][data-y="${(fromY + toY) / 2}"] .piece`);
+  },
+  "象": function(fromX, fromY, toX, toY) {
+    return Math.abs(toX - fromX) === 2 && Math.abs(toY - fromY) === 2 && toY <= 4 && !document.querySelector(`[data-x="${(fromX + toX) / 2}"][data-y="${(fromY + toY) / 2}"] .piece`);
+  },
+  "馬": function(fromX, fromY, toX, toY) {
+    const dx = Math.abs(toX - fromX);
+    const dy = Math.abs(toY - fromY);
+    if ((dx === 2 && dy === 1) || (dx === 1 && dy === 2)) {
+      if (dx === 2) {
+        return !document.querySelector(`[data-x="${fromX + (toX - fromX) / 2}"][data-y="${fromY}"] .piece`);
+      } else {
+        return !document.querySelector(`[data-x="${fromX}"][data-y="${fromY + (toY - fromY) / 2}"] .piece`);
+      }
+    }
+    return false;
+  },
+  "傌": function(fromX, fromY, toX, toY) {
+    const dx = Math.abs(toX - fromX);
+    const dy = Math.abs(toY - fromY);
+    if ((dx === 2 && dy === 1) || (dx === 1 && dy === 2)) {
+      if (dx === 2) {
+        return !document.querySelector(`[data-x="${fromX + (toX - fromX) / 2}"][data-y="${fromY}"] .piece`);
+      } else {
+        return !document.querySelector(`[data-x="${fromX}"][data-y="${fromY + (toY - fromY) / 2}"] .piece`);
+      }
+    }
+    return false;
+  },
+  "車": function(fromX, fromY, toX, toY) {
+    return (fromX === toX && isPathClear(fromX, fromY, toX, toY)) || (fromY === toY && isPathClear(fromX, fromY, toX, toY));
+  },
+  "俥": function(fromX, fromY, toX, toY) {
+    return (fromX === toX && isPathClear(fromX, fromY, toX, toY)) || (fromY === toY && isPathClear(fromX, fromY, toX, toY));
+  },
+  "炮": function(fromX, fromY, toX, toY) {
+    const targetPiece = document.querySelector(`[data-x="${toX}"][data-y="${toY}"] .piece`);
+    if (fromX === toX) {
+      const count = countPiecesBetween(fromX, fromY, toX, toY);
+      if (targetPiece) {
+        return count === 1;
+      } else {
+        return count === 0;
+      }
+    } else if (fromY === toY) {
+      const count = countPiecesBetween(fromX, fromY, toX, toY);
+      if (targetPiece) {
+        return count === 1;
+      } else {
+        return count === 0;
+      }
+    }
+    return false;
+  },
+  "砲": function(fromX, fromY, toX, toY) {
+    const targetPiece = document.querySelector(`[data-x="${toX}"][data-y="${toY}"] .piece`);
+    if (fromX === toX) {
+      const count = countPiecesBetween(fromX, fromY, toX, toY);
+      if (targetPiece) {
+        return count === 1;
+      } else {
+        return count === 0;
+      }
+    } else if (fromY === toY) {
+      const count = countPiecesBetween(fromX, fromY, toX, toY);
+      if (targetPiece) {
+        return count === 1;
+      } else {
+        return count === 0;
+      }
+    }
+    return false;
+  },
+  "兵": function(fromX, fromY, toX, toY) {
+    if (fromY >= 5) {
+      return (toX === fromX && toY === fromY - 1);
+    } else {
+      return (Math.abs(toX - fromX) === 1 && toY === fromY) || (toX === fromX && toY === fromY - 1);
+    }
+  },
+  "卒": function(fromX, fromY, toX, toY) {
+    if (fromY <= 4) {
+      return (toX === fromX && toY === fromY + 1);
+    } else {
+      return (Math.abs(toX - fromX) === 1 && toY === fromY) || (toX === fromX && toY === fromY + 1);
+    }
+  }
+};
+
 // 创建棋盘网格线
 function createGridLines() {
     // 水平线
@@ -66,19 +236,6 @@ function countPiecesBetween(fromX, fromY, toX, toY) {
         if (document.querySelector(`[data-x="${x}"][data-y="${y}"] .piece`)) count++;
     }
     return count;
-}
-
-// 将帅照面检查
-function checkGeneralFaceOff() {
-    const generals = [...document.querySelectorAll('[data-type="將"], [data-type="帥"]')];
-    if (generals.length !== 2) return false;
-    const [g1, g2] = generals;
-    const x1 = parseInt(g1.closest('.cell').dataset.x);
-    const y1 = parseInt(g1.closest('.cell').dataset.y);
-    const x2 = parseInt(g2.closest('.cell').dataset.x);
-    const y2 = parseInt(g2.closest('.cell').dataset.y);
-    if (x1 !== x2) return false;
-    return countPiecesBetween(x1, y1, x2, y2) === 0;
 }
 
 // 创建棋盘
@@ -180,6 +337,21 @@ function createBoard() {
                             // 触发马踏动画
                             triggerCrushAnimation(toX, toY, "horse");
                         }
+                        // 检查是否是仕/士吃子
+                        else if (pieceType === "仕" || pieceType === "士") {
+                            // 触发仕/士吃子动画
+                            triggerCrushAnimation(toX, toY, "soldier");
+                        }
+                        // 检查是否是俥/車吃子
+                        else if (pieceType === "俥" || pieceType === "車") {
+                            // 触发俥/車吃子动画
+                            triggerCrushAnimation(toX, toY, "car");
+                        }
+                        // 检查是否是炮吃子
+                        else if (pieceType === "炮" || pieceType === "砲") {
+                            // 触发炮吃子动画
+                            triggerCrushAnimation(toX, toY, "cannon");
+                        }
                         
                         // 检查是否吃掉了帅或将
                         if (targetPiece.dataset.type === "帥" || targetPiece.dataset.type === "將") {
@@ -233,6 +405,7 @@ function createBoard() {
 
                     // 检查胜利条件
                     const kings = document.querySelectorAll('[data-type="將"], [data-type="帥"]');
+
                     if (kings.length < 2) {
                         const winner = kings.length > 0 ? (kings[0].classList.contains('red') ? '红方' : '黑方') : '游戏结束';
                         const winnerDisplay = document.createElement('div');
@@ -272,6 +445,19 @@ function createBoard() {
     switchBlinkAnimation();
 }
 
+// 将帅照面检查
+function checkGeneralFaceOff() {
+    const generals = [...document.querySelectorAll('[data-type="將"], [data-type="帥"]')];
+    if (generals.length !== 2) return false;
+    const [g1, g2] = generals;
+    const x1 = parseInt(g1.closest('.cell').dataset.x);
+    const y1 = parseInt(g1.closest('.cell').dataset.y);
+    const x2 = parseInt(g2.closest('.cell').dataset.x);
+    const y2 = parseInt(g2.closest('.cell').dataset.y);
+    if (x1 !== x2) return false;
+    return countPiecesBetween(x1, y1, x2, y2) === 0;
+}
+
 // 触发踏碎动画
 function triggerCrushAnimation(x, y, animalType) {
     const crushEffect = document.getElementById('crush-effect');
@@ -292,10 +478,27 @@ function triggerCrushAnimation(x, y, animalType) {
     crushEffect.style.display = 'block';
     
     // 根据动物类型设置不同的动画图片
-    const animationImage = animalType === "elephant" ? ELEPHANT_STOMP_IMAGE : HORSE_STOMP_IMAGE;
+    let animationImage;
+    switch (animalType) {
+        case "elephant":
+            animationImage = ELEPHANT_STOMP_IMAGE;
+            break;
+        case "horse":
+            animationImage = HORSE_STOMP_IMAGE;
+            break;
+        case "soldier":
+            animationImage = SOLDIER_STOMP_IMAGE;
+            break;
+        case "car":
+            animationImage = CAR_STOMP_IMAGE;
+            break;
+        case "cannon":
+            animationImage = CANNON_STOMP_IMAGE;
+            break;
+    }
     
     // 设置动画内容
-    crushEffect.innerHTML = `<img src="${animationImage}" alt="${animalType === "elephant" ? "大象" : "马"}踏碎动画">`;
+    crushEffect.innerHTML = `<img src="${animationImage}" alt="${animalType === "elephant" ? "大象" : animalType === "horse" ? "马" : animalType === "soldier" ? "仕/士" : animalType === "car" ? "俥/車" : "炮"}踏碎动画">`;
     
     // 重置动画（如果正在播放）
     crushEffect.style.animation = 'none';
@@ -306,38 +509,6 @@ function triggerCrushAnimation(x, y, animalType) {
     setTimeout(() => {
         crushEffect.style.display = 'none';
     }, 500);
-}
-
-// 切换闪烁动画
-function switchBlinkAnimation() {
-    document.querySelectorAll('.piece').forEach(piece => {
-        piece.classList.remove('blink-animation');
-    });
-    const currentPlayerPieces = document.querySelectorAll(`.piece.${currentPlayer}`);
-    currentPlayerPieces.forEach(piece => {
-        piece.classList.add('blink-animation');
-    });
-}
-
-// 重新开始游戏
-function restartGame() {
-    selectedPiece = null;
-    selectedCell = null;
-    moveHistory = [];
-    currentPlayer = 'red';
-    playerDisplay.textContent = '红方';
-    // 重置计时器
-    clearInterval(timer);
-    remainingTime = 30;
-    timerDisplay.textContent = remainingTime;
-    startGameBtn.disabled = false;
-    // 关闭视频容器
-    pieceVideoContainer.style.display = 'none';
-    const winnerDisplay = document.getElementById('winner-display');
-    if (winnerDisplay) {
-        winnerDisplay.remove();
-    }
-    createBoard();
 }
 
 // 播放棋子被吃掉的视频
@@ -374,15 +545,77 @@ function playPieceVideo(videoPath) {
     };
 }
 
-// 关闭棋子视频
-function closePieceVideo() {
-    pieceVideo.pause();
-    pieceVideoContainer.style.display = 'none';
-    // 如果游戏还未结束，继续播放背景音乐
-    const kings = document.querySelectorAll('[data-type="將"], [data-type="帥"]');
-    if (kings.length > 1) {
-        music.play();
+// 切换闪烁动画
+function switchBlinkAnimation() {
+    document.querySelectorAll('.piece').forEach(piece => {
+        piece.classList.remove('blink-animation');
+    });
+    const currentPlayerPieces = document.querySelectorAll(`.piece.${currentPlayer}`);
+    currentPlayerPieces.forEach(piece => {
+        piece.classList.add('blink-animation');
+    });
+}
+
+// 打开视频容器
+function openVideo() {
+    musicWasPlaying = !music.paused; // 记录打开前的音乐状态
+    if (musicWasPlaying) {
+        toggleMusic(); // 暂停背景音乐
     }
+
+    const tabcontent = document.getElementsByClassName("tabcontent");
+    for (let i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    const tablinks = document.getElementsByClassName("tablinks");
+    for (let i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    videoContainer.style.display = 'block';
+    document.querySelector('[onclick="openVideo()"]').className += " active";
+}
+
+// 切换音乐播放状态
+function toggleMusic() {
+    if (music.paused) {
+        music.play();
+        musicBtn.textContent = '暂停音乐';
+    } else {
+        music.pause();
+        musicBtn.textContent = '播放音乐';
+    }
+}
+
+// 开始游戏函数
+function startGame() {
+    const startGameBtn = document.getElementById('start-game-btn');
+    startGameBtn.disabled = true;
+    createBoard();
+    document.querySelector('.tablinks').click();
+    startTimer();
+    // 确保音乐在页面加载时播放
+    music.play().catch(e => {
+        console.log("自动播放被阻止:", e);
+        // 可以在这里提示用户点击按钮开始音乐
+        musicBtn.textContent = '点击播放音乐';
+    });
+
+    // 确保游戏开始时音乐状态由用户控制（非自动播放）
+    music.play().catch(e => {
+        musicBtn.textContent = '点击播放音乐';
+    });
+}
+
+// 打开标签页
+function openTab(evt, tabName) {
+    const tabcontent = document.getElementsByClassName("tabcontent");
+    const tablinks = document.getElementsByClassName("tablinks");
+    
+    for (let i = 0; i < tabcontent.length; i++) tabcontent[i].style.display = "none";
+    for (let i = 0; i < tablinks.length; i++) tablinks[i].className = tablinks[i].className.replace(" active", "");
+    
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
 }
 
 // 悔棋功能
@@ -408,6 +641,28 @@ function undoMove() {
     startTimer();
 }
 
+// 重新开始游戏
+function restartGame() {
+    selectedPiece = null;
+    selectedCell = null;
+    moveHistory = [];
+    currentPlayer = 'red';
+    playerDisplay.textContent = '红方';
+    // 重置计时器
+    clearInterval(timer);
+    remainingTime = 30;
+    timerDisplay.textContent = remainingTime;
+    const startGameBtn = document.getElementById('start-game-btn');
+    startGameBtn.disabled = false;
+    // 关闭视频容器
+    pieceVideoContainer.style.display = 'none';
+    const winnerDisplay = document.getElementById('winner-display');
+    if (winnerDisplay) {
+        winnerDisplay.remove();
+    }
+    createBoard();
+}
+
 // 教程功能
 function showTutorial() {
     const modal = document.getElementById('tutorial-modal');
@@ -420,6 +675,7 @@ function showTutorial() {
     modal.style.transform = 'translate(-50%, -50%)';
 }
 
+// 关闭教程
 function closeTutorial() {
     document.getElementById('tutorial-modal').style.display = 'none';
     // 暂停视频
@@ -432,25 +688,6 @@ function closeTutorial() {
     }
     // 重置状态记录
     musicWasPlaying = false;
-}
-
-// 打开视频容器
-function openVideo() {
-    musicWasPlaying = !music.paused; // 记录打开前的音乐状态
-    if (musicWasPlaying) {
-        toggleMusic(); // 暂停背景音乐
-    }
-
-    const tabcontent = document.getElementsByClassName("tabcontent");
-    for (let i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
-    const tablinks = document.getElementsByClassName("tablinks");
-    for (let i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-    videoContainer.style.display = 'block';
-    document.querySelector('[onclick="openVideo()"]').className += " active";
 }
 
 // 播放/暂停视频
@@ -468,34 +705,15 @@ function toggleVideo() {
     }
 }
 
-// 切换音乐播放状态
-function toggleMusic() {
-    if (music.paused) {
+// 关闭棋子视频
+function closePieceVideo() {
+    pieceVideo.pause();
+    pieceVideoContainer.style.display = 'none';
+    // 如果游戏还未结束，继续播放背景音乐
+    const kings = document.querySelectorAll('[data-type="將"], [data-type="帥"]');
+    if (kings.length > 1) {
         music.play();
-        musicBtn.textContent = '暂停音乐';
-    } else {
-        music.pause();
-        musicBtn.textContent = '播放音乐';
     }
-}
-
-// 开始游戏函数
-function startGame() {
-    startGameBtn.disabled = true;
-    createBoard();
-    document.querySelector('.tablinks').click();
-    startTimer();
-    // 确保音乐在页面加载时播放
-    music.play().catch(e => {
-        console.log("自动播放被阻止:", e);
-        // 可以在这里提示用户点击按钮开始音乐
-        musicBtn.textContent = '点击播放音乐';
-    });
-
-    // 确保游戏开始时音乐状态由用户控制（非自动播放）
-    music.play().catch(e => {
-        musicBtn.textContent = '点击播放音乐';
-    });
 }
 
 // 启动计时器
@@ -519,29 +737,6 @@ function startTimer() {
 }
 
 // 拖动相关函数
-function initDraggable() {
-    const modal = document.getElementById('tutorial-modal');
-    const modalContent = document.querySelector('.modal-content');
-    
-    // 只有在模态框存在时才设置拖动
-    if (modal && modalContent) {
-        // 设置模态框为绝对定位以便拖动
-        modal.style.position = 'absolute';
-        modal.style.zIndex = '999';
-        
-        // 添加拖动事件到整个模态框内容
-        modalContent.style.cursor = 'move';
-        modalContent.addEventListener('mousedown', startDrag);
-        
-        // 确保关闭按钮不会触发拖动
-        const closeBtn = document.querySelector('.close');
-        if (closeBtn) {
-            closeBtn.style.pointerEvents = 'auto';
-            closeBtn.style.cursor = 'pointer';
-        }
-    }
-}
-
 function startDrag(e) {
     // 防止点击关闭按钮时触发拖动
     if (e.target.classList.contains('close')) return;
@@ -590,22 +785,11 @@ function stopDrag() {
     document.removeEventListener('mouseup', stopDrag);
 }
 
-// 打开标签页
-function openTab(evt, tabName) {
-    const tabcontent = document.getElementsByClassName("tabcontent");
-    const tablinks = document.getElementsByClassName("tablinks");
-    
-    for (let i = 0; i < tabcontent.length; i++) tabcontent[i].style.display = "none";
-    for (let i = 0; i < tablinks.length; i++) tablinks[i].className = tablinks[i].className.replace(" active", "");
-    
-    document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.className += " active";
-}
-
 // 初始化页面时不自动开始游戏
 window.onload = function() {
     createBoard();
     document.querySelector('.tablinks').click();
+    const startGameBtn = document.getElementById('start-game-btn');
     startGameBtn.disabled = false;
     remainingTime = 30;
     timerDisplay.textContent = remainingTime;
@@ -619,195 +803,37 @@ window.onload = function() {
     
     const horseStompImg = new Image();
     horseStompImg.src = HORSE_STOMP_IMAGE;
+
+    const soldierStompImg = new Image();
+    soldierStompImg.src = SOLDIER_STOMP_IMAGE;
+
+    const carStompImg = new Image();
+    carStompImg.src = CAR_STOMP_IMAGE;
+
+    const cannonStompImg = new Image();
+    cannonStompImg.src = CANNON_STOMP_IMAGE;
 };
 
-// 全局变量声明
-let board = document.getElementById('chessboard');
-let selectedPiece = null;
-let selectedCell = null;
-let currentPlayer = 'red';
-let playerDisplay = document.getElementById('current-player');
-let timer;
-let remainingTime = 30;
-let timerDisplay = document.getElementById('timer');
-let moveHistory = [];
-let isDragging = false;
-let draggedElement = null;
-let offsetX = 0;
-let offsetY = 0;
-let music = document.getElementById('game-music');
-let musicBtn = document.getElementById('music-btn');
-let tutorialVideo = document.getElementById('tutorial-video');
-let playPauseBtn = document.getElementById('play-pause-btn');
-let videoContainer = document.getElementById('video-container');
-let pieceVideo = document.getElementById('piece-video');
-let pieceVideoContainer = document.getElementById('piece-video-container');
-let startGameBtn = document.getElementById('start-game-btn');
-let musicWasPlaying = false;
-
-// 初始棋子布局
-const initialPieces = {
-    "0,0": { color: "black", text: "車" },
-    "1,0": { color: "black", text: "馬" },
-    "2,0": { color: "black", text: "象" },
-    "3,0": { color: "black", text: "仕" },
-    "4,0": { color: "black", text: "將" },
-    "5,0": { color: "black", text: "仕" },
-    "6,0": { color: "black", text: "象" },
-    "7,0": { color: "black", text: "馬" },
-    "8,0": { color: "black", text: "車" },
-    "1,2": { color: "black", text: "砲" },
-    "7,2": { color: "black", text: "砲" },
-    "0,3": { color: "black", text: "卒" },
-    "2,3": { color: "black", text: "卒" },
-    "4,3": { color: "black", text: "卒" },
-    "6,3": { color: "black", text: "卒" },
-    "8,3": { color: "black", text: "卒" },
-    "0,9": { color: "red", text: "俥" },
-    "1,9": { color: "red", text: "傌" },
-    "2,9": { color: "red", text: "相" },
-    "3,9": { color: "red", text: "仕" },
-    "4,9": { color: "red", text: "帥" },
-    "5,9": { color: "red", text: "仕" },
-    "6,9": { color: "red", text: "相" },
-    "7,9": { color: "red", text: "傌" },
-    "8,9": { color: "red", text: "俥" },
-    "1,7": { color: "red", text: "炮" },
-    "7,7": { color: "red", text: "炮" },
-    "0,6": { color: "red", text: "兵" },
-    "2,6": { color: "red", text: "兵" },
-    "4,6": { color: "red", text: "兵" },
-    "6,6": { color: "red", text: "兵" },
-    "8,6": { color: "red", text: "兵" }
-};
-
-// 移动规则验证器
-const moveValidators = {
-    "車": function(fromX, fromY, toX, toY) {
-        return (fromX === toX || fromY === toY) && isPathClear(fromX, fromY, toX, toY);
-    },
-    "俥": function(fromX, fromY, toX, toY) {
-        return (fromX === toX || fromY === toY) && isPathClear(fromX, fromY, toX, toY);
-    },
-    "馬": function(fromX, fromY, toX, toY) {
-        const dx = Math.abs(toX - fromX);
-        const dy = Math.abs(toY - fromY);
-        if ((dx === 2 && dy === 1) || (dx === 1 && dy === 2)) {
-            if (dx === 2) {
-                const blockX = fromX + (toX - fromX) / 2;
-                if (!document.querySelector(`[data-x="${blockX}"][data-y="${fromY}"] .piece`)) {
-                    return true;
-                }
-            } else {
-                const blockY = fromY + (toY - fromY) / 2;
-                if (!document.querySelector(`[data-x="${fromX}"][data-y="${blockY}"] .piece`)) {
-                    return true;
-                }
-            }
+// 初始化可拖动模态框
+function initDraggable() {
+    const modal = document.getElementById('tutorial-modal');
+    const modalContent = document.querySelector('.modal-content');
+    
+    // 只有在模态框存在时才设置拖动
+    if (modal && modalContent) {
+        // 设置模态框为绝对定位以便拖动
+        modal.style.position = 'absolute';
+        modal.style.zIndex = '999';
+        
+        // 添加拖动事件到整个模态框内容
+        modalContent.style.cursor = 'move';
+        modalContent.addEventListener('mousedown', startDrag);
+        
+        // 确保关闭按钮不会触发拖动
+        const closeBtn = document.querySelector('.close');
+        if (closeBtn) {
+            closeBtn.style.pointerEvents = 'auto';
+            closeBtn.style.cursor = 'pointer';
         }
-        return false;
-    },
-    "傌": function(fromX, fromY, toX, toY) {
-        const dx = Math.abs(toX - fromX);
-        const dy = Math.abs(toY - fromY);
-        if ((dx === 2 && dy === 1) || (dx === 1 && dy === 2)) {
-            if (dx === 2) {
-                const blockX = fromX + (toX - fromX) / 2;
-                if (!document.querySelector(`[data-x="${blockX}"][data-y="${fromY}"] .piece`)) {
-                    return true;
-                }
-            } else {
-                const blockY = fromY + (toY - fromY) / 2;
-                if (!document.querySelector(`[data-x="${fromX}"][data-y="${blockY}"] .piece`)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    },
-    "兵": function(fromX, fromY, toX, toY) {
-        if (fromY >= 5) {
-            return (toX === fromX && toY === fromY - 1);
-        } else {
-            return ((toX === fromX && toY === fromY - 1) || (Math.abs(toX - fromX) === 1 && toY === fromY));
-        }
-    },
-    "卒": function(fromX, fromY, toX, toY) {
-        if (fromY < 5) {
-            return (toX === fromX && toY === fromY + 1);
-        } else {
-            return ((toX === fromX && toY === fromY + 1) || (Math.abs(toX - fromX) === 1 && toY === fromY));
-        }
-    },
-    "仕": function(fromX, fromY, toX, toY) {
-        return (Math.abs(toX - fromX) === 1 && Math.abs(toY - fromY) === 1) &&
-               (fromX >= 3 && fromX <= 5) && (fromY >= 0 && fromY <= 2) &&
-               (toX >= 3 && toX <= 5) && (toY >= 0 && toY <= 2);
-    },
-    "士": function(fromX, fromY, toX, toY) {
-        return (Math.abs(toX - fromX) === 1 && Math.abs(toY - fromY) === 1) &&
-               (fromX >= 3 && fromX <= 5) && (fromY >= 7 && fromY <= 9) &&
-               (toX >= 3 && toX <= 5) && (toY >= 7 && toY <= 9);
-    },
-    "將": function(fromX, fromY, toX, toY) {
-        return (Math.abs(toX - fromX) + Math.abs(toY - fromY) === 1) &&
-               (fromX >= 3 && fromX <= 5) && (fromY >= 0 && fromY <= 2) &&
-               (toX >= 3 && toX <= 5) && (toY >= 0 && toY <= 2);
-    },
-    "帥": function(fromX, fromY, toX, toY) {
-        return (Math.abs(toX - fromX) + Math.abs(toY - fromY) === 1) &&
-               (fromX >= 3 && fromX <= 5) && (fromY >= 7 && fromY <= 9) &&
-               (toX >= 3 && toX <= 5) && (toY >= 7 && toY <= 9);
-    },
-    "象": function(fromX, fromY, toX, toY) {
-        const dx = toX - fromX;
-        const dy = toY - fromY;
-        if (Math.abs(dx) === 2 && Math.abs(dy) === 2) {
-            const blockX = fromX + dx / 2;
-            const blockY = fromY + dy / 2;
-            if (!document.querySelector(`[data-x="${blockX}"][data-y="${blockY}"] .piece`) && fromY < 5 && toY < 5) {
-                return true;
-            }
-        }
-        return false;
-    },
-    "相": function(fromX, fromY, toX, toY) {
-        const dx = toX - fromX;
-        const dy = toY - fromY;
-        if (Math.abs(dx) === 2 && Math.abs(dy) === 2) {
-            const blockX = fromX + dx / 2;
-            const blockY = fromY + dy / 2;
-            if (!document.querySelector(`[data-x="${blockX}"][data-y="${blockY}"] .piece`) && fromY >= 5 && toY >= 5) {
-                return true;
-            }
-        }
-        return false;
-    },
-    "砲": function(fromX, fromY, toX, toY) {
-        if (fromX === toX || fromY === toY) {
-            const targetPiece = document.querySelector(`[data-x="${toX}"][data-y="${toY}"] .piece`);
-            if (targetPiece) {
-                return countPiecesBetween(fromX, fromY, toX, toY) === 1;
-            } else {
-                return isPathClear(fromX, fromY, toX, toY);
-            }
-        }
-        return false;
-    },
-    "炮": function(fromX, fromY, toX, toY) {
-        if (fromX === toX || fromY === toY) {
-            const targetPiece = document.querySelector(`[data-x="${toX}"][data-y="${toY}"] .piece`);
-            if (targetPiece) {
-                return countPiecesBetween(fromX, fromY, toX, toY) === 1;
-            } else {
-                return isPathClear(fromX, fromY, toX, toY);
-            }
-        }
-        return false;
     }
-};
-
-// 大象踏碎动画图片路径
-const ELEPHANT_STOMP_IMAGE = 'elephant_stomp.png';
-// 马踏动画图片路径
-const HORSE_STOMP_IMAGE = 'horse_stomp.png';
+}

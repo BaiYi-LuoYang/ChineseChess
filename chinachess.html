@@ -143,7 +143,7 @@
         <h3>兵/卒</h3>
         <p>未过河前只能前进；过河后可移动一格</p>
         <h3>仕/士</h3>
-        <p>只走米字格，只能走一</p>
+        <p>只走米字格，只能走一格</p>
       </div>
 
       <div id="victory" class="tabcontent">
@@ -189,7 +189,7 @@
         const avatarDisplay = document.getElementById('avatar-display');
 
         usernameDisplay.textContent = `欢迎你，${username}`;
-        
+
         // 检查头像是否是DataURL格式
         if (avatar.startsWith('data:image')) {
           avatarDisplay.src = avatar;
