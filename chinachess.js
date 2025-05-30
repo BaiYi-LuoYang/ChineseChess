@@ -2,7 +2,7 @@
 const ELEPHANT_STOMP_IMAGE = 'elephant_stomp.png';
 const HORSE_STOMP_IMAGE = 'horse_stomp.png';
 const SOLDIER_STOMP_IMAGE = 'soldier_stomp.png';
-const CAR_STOMP_IMAGE = 'car_stomp.png';
+const CAR_STOMP_IMAGE = 'car.png';
 const CANNON_STOMP_IMAGE = 'fort.png';
 
 // 全局变量

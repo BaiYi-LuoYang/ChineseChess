@@ -315,19 +315,30 @@
     function previewAvatar(event) {
       const input = event.target;
       const preview = document.getElementById('previewImage');
-      
+
       if (input.files && input.files[0]) {
         const reader = new FileReader();
-        
-        reader.onload = function(e) {
+
+        reader.onload = function (e) {
           preview.src = e.target.result;
         }
-        
+
         reader.readAsDataURL(input.files[0]);
       } else {
         // 如果用户取消选择文件，恢复默认头像
         preview.src = 'dragon.webp';
       }
+    }
+
+    // 设置cookie
+    function setCookie(name, value, days) {
+      let expires = "";
+      if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+      }
+      document.cookie = name + "=" + (value || "") + expires + "; path=/";
     }
 
     // 页面加载完成后初始化
@@ -403,6 +414,11 @@
           localStorage.setItem('username', username);
           localStorage.setItem('avatar', avatarData);
 
+          // 设置cookie
+          setCookie('isLoggedIn', 'true', 7);
+          setCookie('username', username, 7);
+          setCookie('avatar', avatarData, 7);
+
           // 模拟登录请求
           setTimeout(() => {
             // 登录成功
@@ -420,6 +436,7 @@
         } else {
           // 如果用户没有上传头像，使用默认头像
           localStorage.setItem('avatar', 'dragon.webp');
+          setCookie('avatar', 'dragon.webp', 7);
 
           // 模拟登录请求
           setTimeout(() => {
