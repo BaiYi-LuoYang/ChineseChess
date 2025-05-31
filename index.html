@@ -62,6 +62,12 @@
       .shadow-ink {
         box-shadow: 0 4px 15px rgba(45, 42, 50, 0.2);
       }
+      .no-select {
+        user-select: none;
+        -webkit-user-select: none; /* Safari */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE10+/Edge */
+      }
     }
 
     /* 水墨风格背景动画 */
@@ -135,7 +141,7 @@
   </style>
 </head>
 
-<body class="min-h-screen bg-paper overflow-x-hidden scroll-smooth">
+<body class="min-h-screen bg-paper overflow-x-hidden scroll-smooth no-select">
   <!-- 背景图片 -->
   <div class="fixed inset-0 z-0 bg-cover bg-center ink-wash" style="background-image: url('./water_ink_background.jpg');">
     <!-- 水墨纹理叠加 -->
